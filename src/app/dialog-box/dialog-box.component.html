@@ -1,0 +1,69 @@
+<!-- dialog-box.component.html -->
+<h1 mat-dialog-title><strong>{{action}} Moneycode</strong></h1>
+<div mat-dialog-content *ngIf="action != 'Delete' && !DeleteAll && action != 'DeleteAll'; else elseTemplate">
+
+  <form [formGroup]="moneycodeForm" autocomplete="off" novalidate fxLayout="column wrap" fxLayoutAlign="center center"
+    fxLayoutGap="10px">
+    <mat-form-field class="example-full-width">
+      <mat-label>Issue Money To</mat-label>
+      <input matInput placeholder="payee name" required formControlName="Drivername" fxFlex="50"
+        [(ngModel)]="local_data.Drivername">
+      <mat-error *ngIf="moneycodeForm.controls['Drivername'].hasError('required')">
+        Payeename is required!
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Select Contract</mat-label>
+      <mat-select formControlName="contract" [(ngModel)]="local_data.contract" required>
+        <mat-option *ngFor="let contract of Contracts" [value]="contract.contractname">
+          {{contract.contractname}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="moneycodeForm.controls['contract'].hasError('required')">Contractor Name is required!
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input type="text" matInput placeholder="Amount" required formControlName="BillingAmount"
+        [(ngModel)]="local_data.BillingAmount">
+      <mat-error *ngIf="moneycodeForm.controls['BillingAmount'].hasError('required')">
+        Amount is required!
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <div mat-dialog-content *ngIf="action == 'Add' ; else readOnlyTemplate">
+        <input matInput placeholder="Driver Id" required formControlName="DriverId" [(ngModel)]="local_data.DriverId">
+      </div>
+      <ng-template #readOnlyTemplate>
+        <input matInput placeholder="Driver Id" required formControlName="DriverId" [(ngModel)]="local_data.DriverId"
+          readonly>
+      </ng-template>
+      <mat-error *ngIf="moneycodeForm.controls['DriverId'].hasError('required')">
+        DriverId is required!
+      </mat-error>
+
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Unit" required formControlName="Unit" [(ngModel)]="local_data.Unit">
+      <mat-error *ngIf="moneycodeForm.controls['Unit'].hasError('required')">
+        Unit is required!
+      </mat-error>
+
+    </mat-form-field>
+  </form>
+</div>
+<ng-template #elseTemplate>
+  Sure to delete <b>{{local_data.name}}</b>?
+</ng-template>
+<div mat-dialog-content *ngIf="DeleteAll">
+  <ng-template>
+    Sure to delete All the Records<b></b>?
+  </ng-template>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="doAction(local_data)">{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
+</div>

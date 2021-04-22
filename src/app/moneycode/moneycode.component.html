@@ -1,0 +1,173 @@
+<div>
+
+  <h2 align="center"> New Money Code </h2>
+  <mat-horizontal-stepper [linear]="isLinear" #stepper labelPosition="bottom">
+    <mat-step [stepControl]="formNameGroup" label="Payee Name">
+      <div style="padding-top: 3%;">
+        <form [formGroup]="formNameGroup" autocomplete="off" novalidate>
+          <!-- <ng-template matStepLabel>Name</ng-template> -->
+          <div class="example-form">
+            <mat-form-field class="example-full-width">
+              <mat-label>Issue Money To</mat-label>
+              <input matInput placeholder="payee name" required formControlName="payeename"
+                [(ngModel)]="moneycodeCollection.payeename">
+              <mat-error *ngIf="formNameGroup.controls['payeename'].hasError('required')">
+                Payeename is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <br />
+          <button mat-raised-button color="primary" (click)="createMoneyCode(moneycodeCollection)"
+            matStepperNext>Next</button>
+        </form>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="formPasswordGroup" label="Contract">
+      <div style="padding-top: 3%;">
+        <form [formGroup]="formPasswordGroup" autocomplete="off" novalidate>
+          <!-- <ng-template matStepLabel>Name</ng-template> -->
+          <div class="example-form">
+            <mat-form-field class="example-full-width">
+              <mat-label>Select Contract</mat-label>
+
+              <mat-select formControlName="contract" [(ngModel)]="moneycodeCollection.contract" required>
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let contract of Contracts" [value]="contract">
+                  {{contract.contractname}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formPasswordGroup.controls['contract'].hasError('required')">Contractor Name is
+                required!</mat-error>
+            </mat-form-field>
+          </div>
+          <br />
+          <button mat-raised-button color="primary" (click)="createMoneyCode(moneycodeCollection)"
+            matStepperNext>Next</button>
+        </form>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="formEmailGroup" label="Amount">
+      <div style="padding-top: 3%;">
+        <form [formGroup]="formEmailGroup" autocomplete="off" novalidate>
+          <!-- <ng-template matStepLabel>Name</ng-template> -->
+          <div class="example-form">
+            <mat-form-field class="example-full-width">
+              <input type="text" matInput placeholder="Amount" required formControlName="amount"
+                [(ngModel)]="moneycodeCollection.amount">
+              <mat-error *ngIf="formEmailGroup.controls['amount'].hasError('required')">
+                Amount is required!
+              </mat-error>
+
+            </mat-form-field>
+          </div>
+          <br />
+          <button mat-raised-button color="primary" (click)="createMoneyCode(moneycodeCollection)"
+            matStepperNext>Next</button>
+        </form>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="formPhoneGroup" label="DriverId">
+      <div style="padding-top: 3%;">
+        <form [formGroup]="formPhoneGroup" autocomplete="off" novalidate>
+          <!-- <ng-template matStepLabel>Name</ng-template> -->
+          <div class="example-form">
+            <mat-form-field class="example-full-width">
+              <input type="tel" matInput placeholder="Driver Id" required formControlName="driverId"
+                [(ngModel)]="moneycodeCollection.driverId">
+              <mat-error *ngIf="formPhoneGroup.controls['driverId'].hasError('required')">
+                DriverId is required!
+              </mat-error>
+              <mat-error *ngIf="formPhoneGroup.controls['driverId'].hasError('min')">
+                DriverId is Wrong!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <br />
+          <button mat-raised-button color="primary" (click)="createMoneyCode(moneycodeCollection)"
+            matStepperNext>Next</button>
+        </form>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="formUnitGroup" label="Unit">
+      <div style="padding-top: 3%;">
+        <form [formGroup]="formUnitGroup" autocomplete="off" novalidate>
+          <!-- <ng-template matStepLabel>Name</ng-template> -->
+          <div class="example-form">
+            <mat-form-field class="example-full-width">
+              <input type="tel" matInput placeholder="Unit" required formControlName="Unit"
+                [(ngModel)]="moneycodeCollection.Unit">
+              <mat-error *ngIf="formUnitGroup.controls['Unit'].hasError('required')">
+                Unit is required!
+              </mat-error>
+              <mat-error *ngIf="formUnitGroup.controls['Unit'].hasError('min')">
+                Unit is Wrong!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <br />
+          <button mat-raised-button color="primary" (click)="createMoneyCode(moneycodeCollection)"
+            matStepperNext>Next</button>
+        </form>
+      </div>
+    </mat-step>&nbsp;
+    <mat-step>
+      <ng-template matStepLabel>Review
+       
+      </ng-template>
+
+      <mat-card flex-gt-sm>
+        <mat-card-title>Review and Confirm
+          <div class="reviewaction">
+            <button mat-raised-button color="primary" matStepperPrevious>Back</button> &nbsp; &nbsp;
+            <button mat-raised-button color="accent" (click)="createMoneycode(moneycodeCollection)">Submit</button> &nbsp;
+            &nbsp;
+  
+            <button mat-raised-button color="warn" (click)="stepper.reset()">Reset</button>
+          </div>
+        </mat-card-title>
+        <mat-divider></mat-divider>
+        <mat-list>
+          <b matSubheader>Account</b>
+          <mat-list-item>
+            <mat-icon matListAvatar>account_box</mat-icon>
+            <b>Contract</b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <p>{{MCElement.contract}}</p>
+          </mat-list-item>
+          <mat-divider matInset></mat-divider>
+          <strong matSubheader>Details</strong>
+          <mat-list-item>
+            <b>Billing Time</b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <p>{{MCElement.BillingDate}}</p>
+          </mat-list-item>
+          <mat-divider matInset></mat-divider>
+          <mat-list-item>
+            <b>DriverId</b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <p>{{MCElement.DriverId}}</p>
+          </mat-list-item>
+          <mat-divider matInset></mat-divider>
+          <mat-list-item>
+            <b>Driver Name</b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <p>{{MCElement.Drivername}}</p>
+          </mat-list-item>
+          <mat-divider matInset></mat-divider>
+          <mat-list-item>
+            <b>BillingAmount</b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <p>{{MCElement.BillingAmount}}</p>
+          </mat-list-item>
+          <mat-divider matInset></mat-divider>
+          <mat-list-item>
+            <b>Unit</b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <p>{{MCElement.Unit}}</p>
+          </mat-list-item>
+        </mat-list>
+        <mat-divider></mat-divider>
+
+      </mat-card>
+
+    </mat-step>
+
+  </mat-horizontal-stepper>
+</div>

@@ -1,0 +1,33 @@
+<section fxLayout="row wrap" fxLayoutAlign="center center">
+    <mat-card fxFlex="500px" fxFlex.xs="100%">
+        <mat-card-title>EFS Carrier Control</mat-card-title>
+        <form [formGroup]="userForm" autocomplete="off" novalidate (ngSubmit)="login(user)" fxLayout="column wrap"
+            fxLayoutAlign="center center" fxLayoutGap="10px">
+            <mat-card-content>
+                <mat-form-field>
+                    <mat-label>Username</mat-label>
+                    <input matInput placeholder="Username" formControlName="Username" [(ngModel)]="user.Username"
+                        required>
+                    <mat-error *ngIf="hasError('Username', 'required')">Name is required</mat-error>
+                    <mat-error *ngIf="hasError('Username', 'maxlength')">You have more than 60 characters</mat-error>
+                </mat-form-field><br><br>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password"
+                        [(ngModel)]="user.password" required>
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="hasError('password', 'required')">password is required</mat-error>
+                    <mat-error *ngIf="hasError('password', 'minlength')">You have more than 6 characters</mat-error>
+                </mat-form-field>
+                <br><br>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button color="primary">Login</button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
+</section>
