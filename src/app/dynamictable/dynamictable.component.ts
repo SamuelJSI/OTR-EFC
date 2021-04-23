@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -29,8 +29,10 @@ export class DynamictableComponent implements OnInit {
   recordDate:any;
   currentDate = new Date();
   displayNoRecords:any;
-  
-  displayedColumns: string[] = ['select','DriverId', 'Contract', 'Drivername', 'BillingAmount', 'BillingDate', 'Status', 'action'];
+  displayMsg:boolean = false;
+  displayContent='';
+  selection = new SelectionModel<MCElement>(true, []);
+  displayedColumns: string[] = ['select','DriverId', 'Contract', 'Drivername', 'BillingAmount','Unit', 'BillingDate', 'Status', 'action'];
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
   actualPaginator!: MatPaginator;
   @ViewChild(MatPaginator) 
@@ -42,8 +44,14 @@ export class DynamictableComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
+    console.log("sort ::",this.sort);
   }
 
+  @ViewChild('alert', { static: true }) alert: ElementRef;
+
+  closeAlert() {
+    this.alert.nativeElement.classList.remove('show');
+  }
   constructor(private datePipe: DatePipe,public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {
     this.recordDate = this.datePipe.transform(this.currentDate, 'MMM d, y, h:mm:ss a');
     this.router.events.subscribe(event => {
@@ -136,6 +144,11 @@ export class DynamictableComponent implements OnInit {
       contract: row_obj.contract,
       Unit: row_obj.Unit
     });
+    this.displayMsg = true;
+    this.displayContent = "Money Code Added!!";
+    setTimeout(() =>{
+      this.displayMsg = false;
+    },3000);
     this.triggerAction();
   }
   updateRowData(row_obj: any) {
@@ -155,6 +168,11 @@ export class DynamictableComponent implements OnInit {
         value.Unit = row_obj.Unit;
 
       }
+      this.displayMsg = true;
+      this.displayContent = "Money Code Updated!!";
+      setTimeout(() =>{
+        this.displayMsg = false;
+      },3000);
       this.triggerAction();
       return true;
     });
@@ -172,12 +190,13 @@ export class DynamictableComponent implements OnInit {
     this.dataSource.data = this.dataSource.data.filter((value, key) => {
       return value.DriverId != row_obj.DriverId;
     });
+    this.displayMsg = true;
+    this.displayContent = "Money Code Deleted!!";
+    setTimeout(() =>{
+      this.displayMsg = false;
+    },3000);
     this.triggerAction();
   }
-
-  
-
-  selection = new SelectionModel<MCElement>(true, []);
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -195,6 +214,12 @@ export class DynamictableComponent implements OnInit {
       this.datasourceObject = localStorage.setItem("datasourceObject", JSON.stringify(this.dataSource.data));
     });
     this.selection = new SelectionModel<MCElement>(true, []);
+    this.displayMsg = true;
+    this.displayContent = "Selected Money Codes Deleted!!";
+    setTimeout(() =>{
+      this.displayMsg = false;
+    },3000);
+    
 
   }
   /** Selects all rows if they are not all selected; otherwise clear selection. */
@@ -204,17 +229,5 @@ export class DynamictableComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  removeAll() {
-    // var oldData = this.dataSource.data;
-    // var oldData = oldData.filter((item) => !this.selection.selected.includes(item));
-    // this.dataSource = new MatTableDataSource<MCElement>(oldData);
-    // this.selection.clear()
-    // this.dataSource.filter = "";
-    // console.log("removeAll :: ",this.dataSource.data);
-   // delete(this.dataSource.data.forEach(row => this.selection.select(row));)
-    //localStorage.removeItem("datasourceObject");
-    //this.MCObject = '';
-    //this.dataSource = new MatTableDataSource<MCElement>(this.ELEMENT_DATA);
-  }
-
+ 
 }

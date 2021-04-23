@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder,Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Contract } from '../Interfaces/contract';
 
@@ -18,6 +18,8 @@ export class DialogBoxComponent implements OnInit {
   action: string;
   local_data: any;
   DeleteAll: boolean = false;
+  submitted = false;
+  
   Contracts: Contract[] = [
     { contractNumber: '149089', contractname: 'Electronic Fund Source' },
     { contractNumber: '567890', contractname: 'Bob big Lots deliveries' },
@@ -26,19 +28,20 @@ export class DialogBoxComponent implements OnInit {
   moneycodeForm!: FormGroup;
 
   ngOnInit(): void {
-    this.moneycodeForm = new FormGroup({
-      Drivername: new FormControl('', [Validators.required]),
-      contract: new FormControl('', [Validators.required]),
-      BillingAmount: new FormControl('', [Validators.required]),
-      DriverId: new FormControl('', [Validators.required]),
-      Unit: new FormControl('', [Validators.required])
+
+    this.moneycodeForm = this.fb.group({
+      Drivername: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]*'), Validators.maxLength(20)]],
+      contract: ['', [Validators.required]],
+      BillingAmount: ['', [Validators.required, Validators.pattern('[0-9.$]*')]],
+      DriverId: ['', [Validators.required, Validators.pattern('[0-9]*'), Validators.maxLength(5)]],
+      Unit: ['', [Validators.required]]
     });
   }
 
   constructor(
     public dialogRef: MatDialogRef<DialogBoxComponent>,
     //@Optional() is used to prevent error if no data is passed
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: UsersData) {
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: UsersData,public fb: FormBuilder) {
     //console.log(data);
     this.local_data = { ...data };
     console.log("local_data :: ", this.local_data);
@@ -46,6 +49,8 @@ export class DialogBoxComponent implements OnInit {
   }
 
   doAction(moneycodeCollection: any) {
+    this.submitted = true;
+   
     if (this.action !== 'Delete' && this.action !== 'DeleteAll') {
       if (this.moneycodeForm.valid) {
         this.dialogRef.close({ event: this.action, data: moneycodeCollection });
@@ -54,6 +59,8 @@ export class DialogBoxComponent implements OnInit {
       this.dialogRef.close({ event: this.action, data: moneycodeCollection });
     }
   }
+
+  get f() { return this.moneycodeForm.controls; }
 
   closeDialog() {
     this.dialogRef.close({ event: 'Cancel' });

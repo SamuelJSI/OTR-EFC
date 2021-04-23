@@ -51,3 +51,16 @@ mat-menu-item{
   position: center;
   margin-left: 300px;
 }
+
+
+.alert-success{
+  width:30%;
+  margin-left: 470px;
+  position: absolute;
+}
+
+.table-container {
+  max-height: calc(100vh - 155px);
+  overflow: auto;
+}
+

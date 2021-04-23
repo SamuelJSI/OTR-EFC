@@ -8,8 +8,16 @@
                     <mat-label>Username</mat-label>
                     <input matInput placeholder="Username" formControlName="Username" [(ngModel)]="user.Username"
                         required>
-                    <mat-error *ngIf="hasError('Username', 'required')">Name is required</mat-error>
-                    <mat-error *ngIf="hasError('Username', 'maxlength')">You have more than 60 characters</mat-error>
+                        <mat-error *ngIf="f.Username.invalid">
+                            <mat-error *ngIf="f.Username.errors.required">
+                              Username is required.
+                            </mat-error>
+                            
+                            <mat-error *ngIf="f.Username.errors.maxlength">
+                                Username must be Not more than 20 chars.
+                            </mat-error>
+                          </mat-error>
+                    
                 </mat-form-field><br><br>
 
                 <mat-form-field appearance="fill">
@@ -20,8 +28,16 @@
                         [attr.aria-pressed]="hide">
                         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
-                    <mat-error *ngIf="hasError('password', 'required')">password is required</mat-error>
-                    <mat-error *ngIf="hasError('password', 'minlength')">You have more than 6 characters</mat-error>
+                    <mat-error *ngIf="f.password.invalid">
+                        <mat-error *ngIf="f.password.errors.required">
+                            password is required.
+                        </mat-error>
+                        <mat-error *ngIf="f.password.errors.pattern">
+                            Password should be Minimum eight characters, at least one uppercase, one number and one special character
+                        </mat-error>
+                        
+                      </mat-error>
+                  
                 </mat-form-field>
                 <br><br>
             </mat-card-content>
