@@ -1,6 +1,3 @@
-
-
-
 <!-- dialog-box.component.html -->
 <h1 mat-dialog-title><strong *ngIf="action != 'DeleteAll'">{{action}} Moneycode</strong></h1>
 
@@ -28,7 +25,7 @@
 
     <mat-form-field class="example-full-width">
       <mat-label>Select Contract</mat-label>
-      <mat-select formControlName="contract" [(ngModel)]="local_data.contract" name="contract" required>
+      <mat-select formControlName="contract" [(ngModel)]="local_data.Contract" name="contract" required>
         <mat-option *ngFor="let contract of Contracts" [value]="contract.contractname">
           {{contract.contractname}}
         </mat-option>
@@ -92,15 +89,15 @@
   <ng-template #elseTemplate>
     <div *ngIf="action === 'DeleteAll'">
       Sure to delete Selected Records<b></b>?
-   </div>
-   <div *ngIf="action !== 'DeleteAll'">
-    Sure to delete <b>{{local_data.name}}</b>?
-  </div>
+    </div>
+    <div *ngIf="action !== 'DeleteAll'">
+      Sure to delete <b>{{local_data.name}}</b>?
+    </div>
 
   </ng-template>
-  
+
   <div mat-dialog-actions>
-    <button   mat-raised-button color="primary" (click)="doAction(local_data)">{{action}}</button>
+    <button mat-raised-button color="primary" (click)="doAction(local_data)">{{action}}</button>
     <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
   </div>
 </form>

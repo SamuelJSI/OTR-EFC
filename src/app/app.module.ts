@@ -13,6 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DynamictableComponent } from './dynamictable/dynamictable.component';
 import { DialogBoxComponent } from './dialog-box/dialog-box.component';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { DialogBoxComponent } from './dialog-box/dialog-box.component';
     MatTableModule,
     MatPaginatorModule,
     MatCheckboxModule,
+    MatTableExporterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

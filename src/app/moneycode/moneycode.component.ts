@@ -4,6 +4,7 @@ import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-i
 import { MCElement } from '../Interfaces/mcelement';
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
 import { Contract } from '../Interfaces/contract';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -21,7 +22,8 @@ export class MoneycodeComponent implements OnInit {
   formPhoneGroup!: FormGroup;
   formUnitGroup!: FormGroup;
   MCElement: MCElement = ({} as any) as MCElement;
-  currentRoute: any;
+  currentRoute: any; recordDate: any;
+  currentDate = new Date();
   moneycodeCollection = { payeename: '', driverId: '', contract: '', amount: '', Unit: '' };
   Contracts: Contract[] = [
     { contractNumber: '149089', contractname: 'Electronic Fund Source' },
@@ -34,8 +36,9 @@ export class MoneycodeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(private datePipe: DatePipe, private router: Router, private fb: FormBuilder) {
     this.createForm();
+    this.recordDate = this.datePipe.transform(this.currentDate, 'MMM d, y, h:mm:ss a');
     this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
         console.log("currentRoute ::", this.router.url);
@@ -67,11 +70,11 @@ export class MoneycodeComponent implements OnInit {
   public createMoneyCode(moneycodeObject: any) {
     this.MCElement.Drivername = moneycodeObject.payeename;
     this.MCElement.DriverId = moneycodeObject.driverId;
-    this.MCElement.contract = moneycodeObject.contract.contractname;
+    this.MCElement.Contract = moneycodeObject.contract.contractname;
     this.MCElement.BillingAmount = moneycodeObject.amount;
     this.MCElement.Unit = moneycodeObject.Unit;
     this.MCElement.Status = "Active";
-    this.MCElement.BillingDate = "Apr 19 ,2021";
+    this.MCElement.BillingDate = this.recordDate;
     console.log("mc ::", this.MCElement);
 
   }

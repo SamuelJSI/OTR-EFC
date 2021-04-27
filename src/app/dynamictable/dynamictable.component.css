@@ -31,9 +31,7 @@ mat-form-field{
   text-align: center;
 }
 .actionButtons{
-  float: right;
-  margin-right: 95px;
-  margin-top: 65px;
+  margin-right: 344px;
 }
 
 button.mat-focus-indicator.mat-button.mat-button-base.mat-primary {
@@ -44,12 +42,17 @@ mat-menu-item{
 }
 ::ng-deep .hided-arrow .mat-sort-header-arrow {
   color: red;
-  height: 15spx;
+  height: 15px;
 }
 .mctitle{
   font-weight: 600;
   position: center;
-  margin-left: 300px;
+  margin-left: 600px;
+}
+
+.searchTable{
+float:left;
+margin-right:200px;
 }
 
 
@@ -62,5 +65,9 @@ mat-menu-item{
 .table-container {
   max-height: calc(100vh - 155px);
   overflow: auto;
+}
+.uploadfile{
+  background-color: #3f51b5;
+  font-size:12px
 }
 

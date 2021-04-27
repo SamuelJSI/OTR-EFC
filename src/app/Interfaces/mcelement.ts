@@ -4,6 +4,6 @@ export interface MCElement {
     BillingAmount: string;
     Status: string;
     BillingDate: string;
-    contract:string;
+    Contract:string;
     Unit:string;
   }
