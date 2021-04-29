@@ -1,0 +1,156 @@
+<div *ngIf="displayMsg" #alert class="alert alert-success alert-dismissible fade show" role="alert">
+  <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>{{displayContent}}</strong>
+</div>
+
+<!-- Money code Create child component -->
+
+<app-moneycode *ngIf="currentRoute !== '/dynamictable'" (buttonClicked)="parentEventHandlerFunction($event)">
+</app-moneycode>
+
+<h3 class="mctitle">Moneycode Activity List</h3><br>
+
+<div class="container text-center" *ngIf="!showMCCreatePage && currentRoute !== '/createMoneycode'">
+  <!-- search filter actions -->
+  <div class="searchTable">
+    <mat-label class="searchlabel"><b>Search</b> </mat-label>&nbsp;&nbsp;&nbsp;
+    <mat-form-field style="width:20vw">
+      <input matInput (keyup)="filter($any($event.target).value)" placeholder="Filter" fxFlex="25">
+    </mat-form-field>
+  </div>&nbsp;&nbsp;&nbsp;
+  <!-- bulk upload  -->
+
+  <!-- <input   type='file' (change)='fileupload(input)' id='fileInput' #input> -->
+  <mat-form-field style="width:20%;margin-right: 10px;margin-bottom: 50px;float:right">
+    <mat-label *ngIf="selectedFile; else newFile">{{selectedFile.name}}</mat-label>
+    <ng-template #newFile>
+      <mat-label>Choose file</mat-label>
+    </ng-template>
+    <input matInput disabled>
+    <button mat-fab color="primary" matSuffix (click)="fileInput.click()" class="uploadfile">
+      <mat-icon>attach_file</mat-icon>Import
+    </button>
+    <input hidden (change)="fileupload($event)" #fileInput type="file" id="file" fxFlex="50">
+  </mat-form-field>&nbsp;&nbsp;
+  <div class="actionbuttons">
+
+    <!-- <button mat-raised-button (click)="exporter.exportTable('csv')" color="primary">
+      <mat-icon>download</mat-icon>Export
+    </button> -->
+    &nbsp;&nbsp;
+    <button mat-raised-button (click)="openDialog('Add',{})" color="primary" data-placement="top" title="Add New MC">
+      New Moneycode
+    </button>&nbsp;&nbsp;
+    <button mat-raised-button (click)="openDialog('DeleteAll',{});DeleteAll = true" color="primary" data-placement="top"
+      title="DeleteAll">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>&nbsp;&nbsp;
+
+
+  <!-- <button mat-raised-button (click)="exporter.exportTable('json')" color="primary"><mat-icon>download</mat-icon>Json</button>
+    <button mat-raised-button (click)="exporter.exportTable('txt')" color="primary"><mat-icon>download</mat-icon>Txt</button>
+    <button mat-raised-button (click)="exporter.exportTable('xlsx')" color="primary"><mat-icon>download</mat-icon>Xlsx</button> -->
+
+
+
+
+
+  <!-- Data table -->
+
+  <div class="table-responsive tablepostion example-container mat-elevation-z8 table-container">
+
+    <!-- <table class="table table-lg table-dark mat-table" mat-table [dataSource]="dataSource" matSort matTableExporter 
+      class="mat-elevation-z8" #exporter="matTableExporter" [hiddenColumns]="[0,7]">-->
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container> &nbsp;&nbsp;
+     <app-material-dynamic-table></app-material-dynamic-table>
+      <!-- <ng-container matColumnDef="Drivername">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Drivername </th>
+        <td mat-cell *matCellDef="let element"> {{element.Drivername}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="DriverId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> DriverId </th>
+        <td mat-cell *matCellDef="let element"> {{element.DriverId}} </td>
+      </ng-container>
+      <ng-container matColumnDef="Contract">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Contract </th>
+        <td mat-cell *matCellDef="let element"> {{element.Contract}} </td>
+      </ng-container>
+      <ng-container matColumnDef="BillingAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> BillingAmount </th>
+        <td mat-cell *matCellDef="let element"> {{element.BillingAmount}} </td>
+      </ng-container>
+      <ng-container matColumnDef="Unit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Unit </th>
+        <td mat-cell *matCellDef="let element"> {{element.Unit}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Status</th>
+        <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let element" class="action-link">
+
+          <button mat-icon-button (click)="openDialog('Update',element)">
+            <mat-icon mat-icon-button color='primary'>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="openDialog('Delete',element)">
+            <mat-icon mat-icon-button color="warn">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClicked(row)">
+      </tr>
+    </table> -->
+
+    <table>
+       <!-- handling Empty table when filtering and list all scenarios-->
+
+      <tbody>
+        <tr *ngIf="dataSource.data.length === 0">
+          <td style="text-align: center;" [attr.colspan]="displayedColumns.length">
+            <mat-card>No Records Found
+            </mat-card>
+          </td>
+        </tr>
+        <tr *ngIf="displayNoRecords">
+          <td style="text-align: center;" [attr.colspan]="displayedColumns.length">
+            <mat-card>
+              <h3 style="text-align:center">No Records found for
+                <span style="color:purple"><b>"{{dataSource.filter}}"</b></span>
+              </h3>
+            </mat-card>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+    <!-- Data table pagination-->
+
+    <!-- <mat-paginator [hidden]="!dataSource.data.length" [pageSize]="5" class="mat-paginator-sticky"
+      [pageSizeOptions]="[5, 10, 25,50,100]" showFirstLastButtons></mat-paginator> -->
+
+  </div>
+</div>

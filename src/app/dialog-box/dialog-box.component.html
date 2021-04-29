@@ -67,11 +67,25 @@
           Invalid DriverId.
         </mat-error>
         <mat-error *ngIf="f.DriverId.errors.maxlength">
-          DriverId must Not more than 5 numbers.
+          DriverId must Not more than 7 numbers.
         </mat-error>
       </mat-error>
 
 
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Select Status</mat-label>
+      <mat-select formControlName="status" [(ngModel)]="local_data.Status" name="status" required>
+        <mat-option *ngFor="let stat of Statuses" [value]="stat.status">
+          {{stat.status}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="f.status.invalid">
+        <mat-error *ngIf="f.status.errors.required">
+          status is required.
+        </mat-error>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="example-full-width">

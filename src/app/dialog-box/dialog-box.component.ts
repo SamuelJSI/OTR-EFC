@@ -25,6 +25,13 @@ export class DialogBoxComponent implements OnInit {
     { contractNumber: '567890', contractname: 'Bob big Lots deliveries' },
     { contractNumber: '987890', contractname: 'Bob vance Refrigered Deliveries' }
   ];
+
+  Statuses: any[] = [
+    { status: 'Active',id:'1' },
+    { status: 'Expired',id:'2'},
+    {status: 'Used',id:'3'},
+    {status: 'Voided',id:'4'}
+  ];
   moneycodeForm!: FormGroup;
 
   ngOnInit(): void {
@@ -33,8 +40,10 @@ export class DialogBoxComponent implements OnInit {
       Drivername: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]*'), Validators.maxLength(20)]],
       contract: ['', [Validators.required]],
       BillingAmount: ['', [Validators.required, Validators.pattern('[0-9.$]*')]],
-      DriverId: ['', [Validators.required, Validators.pattern('[0-9]*'), Validators.maxLength(5)]],
-      Unit: ['', [Validators.required]]
+      DriverId: ['', [Validators.required, Validators.pattern('[0-9]*'), Validators.maxLength(7)]],
+      Unit: ['', [Validators.required]],
+      status: ['', [Validators.required]]
+
     });
   }
 

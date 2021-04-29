@@ -3,27 +3,24 @@ table {
     border: 0px solid black;
     background-color: #E0E0E0;
   }
-  mat-table {
-    border-spacing: 0px;
-  }
+ 
   .tablepostion{
     position:right;
     padding-left: 0px;
     border-color: black;
+    margin-bottom: -25px;
   }
+  
   .mat-header-cell{
     color:black; 
     font-size:13px;
-    text-align: center;
   }
-  td.mat-cell{
-    text-align: center;
-  }
+
   .mat-menu-panel {
     min-width: 90px;
     max-height: 96px;  
  }
-mat-form-field{
+.mat-form-field{
   width: 400px;
 }
 .mat-card{
@@ -31,11 +28,15 @@ mat-form-field{
   text-align: center;
 }
 .actionButtons{
-  margin-right: 344px;
+  margin-right: 400px;
 }
 
 button.mat-focus-indicator.mat-button.mat-button-base.mat-primary {
   background-color: #ccc7c7;
+}
+
+.mat-cell{
+  text-align: center;
 }
 mat-menu-item{
   width:30%
@@ -50,10 +51,7 @@ mat-menu-item{
   margin-left: 600px;
 }
 
-.searchTable{
-float:left;
-margin-right:200px;
-}
+
 
 
 .alert-success{
@@ -70,4 +68,19 @@ margin-right:200px;
   background-color: #3f51b5;
   font-size:12px
 }
+.Multiplecolumfilter{
+  margin-top: 60px;
+  width:100%;
+  margin-right: -140px;
+  cursor:auto;
+}
+.filterTable{
+  background-color: white;
+  margin-top: 0px;
+  margin-left: 50px;
+}
 
+.actionRow{
+  margin-bottom: -29px;
+
+}
