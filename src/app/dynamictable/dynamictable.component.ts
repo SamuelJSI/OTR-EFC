@@ -9,8 +9,6 @@ import { DatePipe } from '@angular/common';
 import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 
-
-
 @Component({
   selector: 'app-dynamictable',
   templateUrl: './dynamictable.component.html',
@@ -45,6 +43,7 @@ export class DynamictableComponent implements OnInit {
   }
 
   constructor(private datePipe: DatePipe,public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {
+    
     this.recordDate = this.datePipe.transform(this.currentDate, 'MMM d, y, h:mm:ss a');
     this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
@@ -53,8 +52,8 @@ export class DynamictableComponent implements OnInit {
       }
     })
 
-    this.InitialElement = localStorage.getItem("datasourceObject");
-    this.MCObject = JSON.parse(this.InitialElement);
+    this.InitialElement = JSON.parse(localStorage.getItem("datasourceObject"));
+    this.MCObject = Array.isArray(this.InitialElement) ? this.InitialElement : [];
     if (this.MCObject.length !== 0) {
       this.dataSource = new MatTableDataSource<MCElement>(this.MCObject);
     } else {
@@ -96,7 +95,7 @@ export class DynamictableComponent implements OnInit {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue;
-    if(this.dataSource.filteredData.length==0){
+    if(this.dataSource && Array.isArray(this.dataSource.filteredData) && this.dataSource.filteredData.length==0){
       this.displayNoRecords=true;
     }else{
       this.displayNoRecords=false;

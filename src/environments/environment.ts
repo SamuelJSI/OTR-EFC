@@ -3,14 +3,19 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
 };
 
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+const OKTA_DOMAIN = 'dev-47146441.okta.com';
+export const CLIENT_ID = '0oanhz22yECWtKlNp5d6';
+const CALLBACK_PATH = '/';
+
+export const ISSUER = `https://${OKTA_DOMAIN}/oauth2/default`;
+const SCOPES = ['openid', 'profile', 'email'];
+
+export const AUTH_CONFIG = {
+  issuer: ISSUER,
+  tokenManager: {
+    storage: 'localStorage',
+  },
+};
