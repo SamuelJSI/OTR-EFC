@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-
-import { CLIENT_ID, ISSUER } from 'src/environments/environment';
 import { AuthenticationService } from './authentication.service';
 
 @Component({
@@ -18,6 +17,7 @@ export class AppComponent implements OnInit {
   public revealPassword: boolean;
 
   constructor(
+    private snackBar: MatSnackBar,
     private authenticationService: AuthenticationService,
     private router: Router
   ) {
@@ -26,14 +26,15 @@ export class AppComponent implements OnInit {
       userName: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
-
     // Subscribe to authentication state changes
   }
 
   async ngOnInit() {
     this.isAuthenticated = await this.authenticationService.isAuthenticated();
     if (this.isAuthenticated) {
-      this.loggedInUser = (await this.authenticationService.getUserDetail()).name;
+      this.loggedInUser = (
+        await this.authenticationService.getUserDetail()
+      ).name;
       this.router.navigate(['/dashboard']);
     }
   }
@@ -44,12 +45,18 @@ export class AppComponent implements OnInit {
       this.authenticationService
         .signIn(credential.userName, credential.password)
         .then(
-          async () => {
+          () => {
             this.isAuthenticated = true;
-            this.loggedInUser = (await this.authenticationService.getUserDetail()).name;
+            this.authenticationService.getUserDetail().then((userDetail) => {
+              this.loggedInUser = userDetail.name;
+            });
             this.router.navigate(['/dashboard']);
           },
-          () => {
+          (reason) => {
+            this.snackBar.open(reason.errorSummary, '', {
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
             this.isAuthenticated = false;
           }
         );

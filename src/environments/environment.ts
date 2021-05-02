@@ -11,10 +11,11 @@ export const CLIENT_ID = '0oanhz22yECWtKlNp5d6';
 const CALLBACK_PATH = '/';
 
 export const ISSUER = `https://${OKTA_DOMAIN}/oauth2/default`;
-const SCOPES = ['openid', 'profile', 'email'];
+const SCOPES = ['openid', 'profile', 'email', 'offline_access'];
 
 export const AUTH_CONFIG = {
   issuer: ISSUER,
+  clientId: CLIENT_ID,
   tokenManager: {
     storage: 'localStorage',
   },
