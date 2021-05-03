@@ -39,7 +39,7 @@ export class DialogBoxComponent implements OnInit {
     this.moneycodeForm = this.fb.group({
       Drivername: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]*'), Validators.maxLength(20)]],
       contract: ['', [Validators.required]],
-      BillingAmount: ['', [Validators.required, Validators.pattern('[0-9.$]*')]],
+      BillingAmount: ['', [Validators.required, Validators.pattern('[0-9.,$]*')]],
       DriverId: ['', [Validators.required, Validators.pattern('[0-9]*'), Validators.maxLength(7)]],
       Unit: ['', [Validators.required]],
       status: ['', [Validators.required]]

@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   public login = (userFormValue: any) => {
     if (this.userForm.valid) {
       localStorage.setItem("loggedInUsername",userFormValue.Username);
-      this.router.navigate(["/dynamictable"]);
+      this.router.navigate(["/table"]);
     }
   }
 

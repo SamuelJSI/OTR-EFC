@@ -1,0 +1,72 @@
+[
+    {
+      "name": "select",
+      "displayName": "Select",
+      "type": "string",
+      "sortable":false,
+      "filterable":false,
+      "exportHiddenIndex":0
+    },
+    {
+      "name": "driverId",
+      "displayName": "Driver ID",
+      "type": "string",
+      "sortable":true,
+      "filterable":true,
+      "exportHiddenIndex":1
+    },
+    {
+      "name": "contract",
+      "displayName": "Contract",
+      "type": "string",
+      "sortable":false,
+      "filterable":true,
+      "exportHiddenIndex":2
+
+    },
+    {
+      "name": "driverName",
+      "displayName": "Driver Name",
+      "type": "string",
+      "sortable":true,
+      "filterable":true,
+      "exportHiddenIndex":3
+
+    },
+    {
+      "name": "billingAmount",
+      "displayName": "Billing Amount",
+      "type": "string",
+      "sortable":true,
+      "filterable":true,
+      "exportHiddenIndex":4
+
+    },
+    {
+      "name": "unit",
+      "displayName": "Unit",
+      "type": "string",
+      "sortable":true,
+      "filterable":false,
+      "exportHiddenIndex":5
+
+    },
+    {
+      "name": "status",
+      "displayName": "Status",
+      "type": "string",
+      "sortable":true,
+      "filterable":true,
+      "exportHiddenIndex":6
+
+    },
+    {
+      "name": "action",
+      "displayName": "Action",
+      "type": "string",
+      "sortable":false,
+      "filterable":false,
+      "exportHiddenIndex":7
+
+    }
+  ]

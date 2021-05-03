@@ -8,44 +8,42 @@
 
 <!-- Money code Create child component -->
 
-<app-moneycode *ngIf="currentRoute !== '/dynamictable'" (buttonClicked)="parentEventHandlerFunction($event)">
-</app-moneycode>
 
 <h3 class="mctitle">Moneycode Activity List</h3><br>
 
-<div class="container text-center" *ngIf="!showMCCreatePage && currentRoute !== '/createMoneycode'">
+<div class="container text-center">
 
   <!-- bulk upload -->
-<div class="actionRow">
-  <mat-form-field style="width:20%;margin-right: 10px;margin-bottom: 50px;float:right">
-    <mat-label *ngIf="selectedFile; else newFile">{{selectedFile.name}}</mat-label>
-    <ng-template #newFile>
-      <mat-label>Choose file</mat-label>
-    </ng-template>
-    <input matInput disabled>
-    <button mat-fab color="primary" matSuffix (click)="fileInput.click()" class="uploadfile">
-      <mat-icon>attach_file</mat-icon>Import
-    </button>
-    <input hidden (change)="fileupload($event)" #fileInput type="file" id="file" fxFlex="50">
-  </mat-form-field>&nbsp;&nbsp;
-  <div class="actionbuttons">
+  <div class="actionRow">
+    <mat-form-field style="width:20%;margin-right: 10px;margin-bottom: 50px;float:right">
+      <mat-label *ngIf="selectedFile; else newFile">{{selectedFile.name}}</mat-label>
+      <ng-template #newFile>
+        <mat-label>Choose file</mat-label>
+      </ng-template>
+      <input matInput disabled>
+      <button mat-fab color="primary" matSuffix (click)="fileInput.click()" class="uploadfile">
+        <mat-icon>attach_file</mat-icon>Import
+      </button>
+      <input hidden (change)="fileupload($event)" #fileInput type="file" id="file" fxFlex="50">
+    </mat-form-field>&nbsp;&nbsp;
+    <div class="actionbuttons">
 
-    <button mat-raised-button (click)="exporter.exportTable('csv')" color="primary">
-      <mat-icon>download</mat-icon>Export
-    </button>
-    &nbsp;&nbsp;
-    <button mat-raised-button (click)="openDialog('Add',{})" color="primary" data-placement="top" title="Add New MC">
-      New Moneycode
-    </button>&nbsp;&nbsp;
-    <button mat-raised-button (click)="openDialog('DeleteAll',{});DeleteAll = true" color="primary" data-placement="top"
-      title="DeleteAll">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>&nbsp;&nbsp;
+      <button mat-raised-button (click)="exporter.exportTable('csv')" color="primary">
+        <mat-icon>download</mat-icon>Export
+      </button>
+      &nbsp;&nbsp;
+      <button mat-raised-button (click)="openDialog('Add',{})" color="primary" data-placement="top" title="Add New MC">
+        New Moneycode
+      </button>&nbsp;&nbsp;
+      <button mat-raised-button (click)="openDialog('DeleteAll',{});DeleteAll = true" color="primary"
+        data-placement="top" title="DeleteAll">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>&nbsp;&nbsp;
   </div>
   <!-- Multiple Column filtering -->
 
-  
+
 
   <!-- Data table -->
 
@@ -53,54 +51,59 @@
     <table class="filterTable">
       <tbody>
         <tr>
-          <td *ngFor="let col of columns;">
-  
-            <div [formGroup]="columnsGroup" *ngIf="col.name != 'select' && col.name != 'action'">
+          <td *ngFor="let column of columns;">
+            <div [formGroup]="columnsGroup" *ngIf="column.filterable">
               <mat-form-field style="width:170px">
-                <mat-label>{{col.name}}</mat-label>
-                <input matInput formControlName="{{col.name}}" placeholder="search" autocomplete="off">
-                <mat-placeholder>{{col.name}}</mat-placeholder>
+                <mat-label>{{column.name}}</mat-label>
+                <input matInput formControlName="{{column.name}}" placeholder="search" autocomplete="off">
               </mat-form-field>&nbsp;&nbsp;&nbsp;
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <table mat-table [dataSource]="dataSource" matSort matTableFilter
-      matTableExporter class="mat-elevation-z8" #exporter="matTableExporter" [hiddenColumns]="[0,7]">
-      <ng-container *ngFor="let col of columns;">
-        <ng-container [matColumnDef]="col.name" *ngIf="col.name != 'select' && col.name != 'action'">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow" arrowPosition="before">{{col.displayName }}
-          </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{ element[col.name] }} </mat-cell>
-        </ng-container>
-        <ng-container [matColumnDef]="col.name" *ngIf="col.name == 'select'">
-          <mat-header-cell *matHeaderCellDef>
+    <table mat-table [dataSource]="dataSource" matSort matTableFilter matTableExporter class="mat-elevation-z8"
+      #exporter="matTableExporter" [hiddenColumns]="[0,7]">
+
+      <ng-container matColumnDef="{{column.name}}" *ngFor=" let column of columns">
+        <div *ngIf="column.name != 'select' && column.name != 'action'">
+          <ng-container *ngIf="column.sortable; else noSort">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center" mat-sort-header class="hided-arrow"
+              arrowPosition="after"> {{column.displayName}} </th>
+          </ng-container>
+          <ng-template #noSort>
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;">{{ column.displayName }}</th>
+          </ng-template>
+          <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element[column.name]}} </td>
+        </div>
+        <div *ngIf="column.name === 'select'">
+          <th mat-header-cell *matHeaderCellDef style="text-align: center;">
             <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
               [indeterminate]="selection.hasValue() && !isAllSelected()">
             </mat-checkbox>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let row">
+          </th>
+          <td mat-cell *matCellDef="let row">
             <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
               [checked]="selection.isSelected(row)">
             </mat-checkbox>
-          </mat-cell>
-        </ng-container>
-
-        <ng-container [matColumnDef]="col.name" *ngIf="col.name == 'action'">
-          <mat-header-cell *matHeaderCellDef> {{ col.displayName }} </mat-header-cell>
-          <mat-cell *matCellDef="let element">
+          </td>
+        </div>
+        <div *ngIf="column.name === 'action'">
+          <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+            {{column.displayName}}
+          </th>
+          <td mat-cell *matCellDef="let element">
             <button mat-icon-button (click)="openDialog('Update',element)">
               <mat-icon mat-icon-button color='primary'>edit</mat-icon>
             </button>
             <button mat-icon-button (click)="openDialog('Delete',element)">
               <mat-icon mat-icon-button color="warn">delete</mat-icon>
             </button>
-          </mat-cell>
-        </ng-container>
+          </td>
+        </div>
       </ng-container>
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
     <!-- handling Empty table when filtering and list all scenarios-->
 

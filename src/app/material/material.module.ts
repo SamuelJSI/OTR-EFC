@@ -16,7 +16,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-
 import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
@@ -25,9 +24,6 @@ import { MatSortModule } from '@angular/material/sort';
   ],
   imports: [
     CommonModule,
-    //MatTableModule,
-    //MatPaginatorModule,
-    //MatCheckboxModule,
     MatMenuModule,
     MatSortModule,
     MatDialogModule,

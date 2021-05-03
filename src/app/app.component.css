@@ -67,3 +67,8 @@ background-color: #6495ED;
   .mat-nav-list .mat-list-item:hover,.mat-nav-list .mat-list-item:active{
     color: blue;
 }
+
+
+body{
+  overflow: hidden
+}

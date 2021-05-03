@@ -5,11 +5,12 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { DialogBoxComponent } from '../dialog-box/dialog-box.component';
 import { MCElement } from '../Interfaces/mcelement';
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe,CurrencyPipe } from '@angular/common';
 import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { tableActionComponent } from "./tableaction.component";
+import { TableComponent } from '../table/table.component';
 
 
 
@@ -17,12 +18,12 @@ import { tableActionComponent } from "./tableaction.component";
   selector: 'app-dynamictable',
   templateUrl: './dynamictable.component.html',
   styleUrls: ['./dynamictable.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe,CurrencyPipe]
+
 })
 export class DynamictableComponent implements OnInit {
-  Rowexist: boolean = false; DeleteAll: boolean = false; displayMsg: boolean = false; validateCSVRows: boolean = false;
-  selectedFile: any; currentRoute: any; MCObject: any; uploadvalue: any;
-  showMCCreatePage: boolean = false;
+  Rowexist: boolean = false; DeleteAll: boolean = false; displayMsg: boolean = false; 
+  selectedFile: any; MCObject: any; 
   datasourceObject: any; text: any; JSONData: any;
   dataSource: MatTableDataSource<MCElement>;
   InitialElement: any; recordDate: any; displayNoRecords: any;
@@ -30,51 +31,8 @@ export class DynamictableComponent implements OnInit {
   ELEMENT_DATA: MCElement[] = [];
   currentDate = new Date(); displayContent = ''; tableaction: any;
   csvRowUpdate = 0; csvRowInserted = 0; valueEmittedFromChildComponent: any;
-
-  //table columns
-  columns: any[] = [
-    {
-      name: 'select',
-      displayName: 'select',
-      type: 'string'
-    },
-    {
-      name: 'DriverId',
-      displayName: 'DriverId',
-      type: 'string'
-    },
-    {
-      name: 'Contract',
-      displayName: 'Contract',
-      type: 'Contract'
-    },
-    {
-      name: 'Drivername',
-      displayName: 'Drivername',
-      type: 'string'
-    },
-    {
-      name: 'BillingAmount',
-      displayName: 'BillingAmount',
-      type: 'string'
-    },
-    {
-      name: 'Unit',
-      displayName: 'Unit',
-      type: 'string'
-    },
-    {
-      name: 'Status',
-      displayName: 'Status',
-      type: 'string'
-    }, {
-      name: 'action',
-      displayName: 'Action',
-      type: 'string'
-    }
-  ];
-  // Displayed columns array of strings
-  displayedColumns: any[] = this.columns.map(col => col.name);
+  @Input() columns: any;
+  displayedColumns: any[];
 
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
   actualPaginator!: MatPaginator;
@@ -88,7 +46,6 @@ export class DynamictableComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
-
   }
 
   @ViewChild('alert', { static: true }) alert: ElementRef;
@@ -99,25 +56,12 @@ export class DynamictableComponent implements OnInit {
 
   columnsGroup: FormGroup;
 
-  constructor(fb: FormBuilder, private datePipe: DatePipe, public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {
+  constructor(fb: FormBuilder, private currencyPipe: CurrencyPipe,private datePipe: DatePipe, public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {
     this.recordDate = this.datePipe.transform(this.currentDate, 'MMM d, y, h:mm:ss a');
-    this.tableaction = new tableActionComponent(datePipe);
-    this.router.events.subscribe(event => {
-      if (event.constructor.name === "NavigationEnd") {
-        this.currentRoute = this.router.url;
-      }
-    })
-
-    let group = {}
-    this.columns.forEach(input_template => {
-      group[input_template.name] = new FormControl('');
-    })
-    this.columnsGroup = new FormGroup(group);
+    this.tableaction = new tableActionComponent(datePipe,currencyPipe);
     this.InitialElement = localStorage.getItem("datasourceObject");
-    //  console.log("localStorage dataSource::", this.InitialElement);
-
     this.MCObject = JSON.parse(this.InitialElement);
-    if (this.MCObject.length !== 0) {
+    if (this.MCObject && this.MCObject.length !== 0) {
       this.dataSource = new MatTableDataSource<MCElement>(this.MCObject);
     } else {
       this.dataSource = new MatTableDataSource<MCElement>(this.ELEMENT_DATA);
@@ -125,67 +69,74 @@ export class DynamictableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.columns) {
+      console.log("MCDataObject coulmns ::", this.columns);
+      this.displayedColumns = this.columns.map(col => col.name);
+    }
     console.log("MCDataObject Initial ::", this.dataSource.data);
-    this.tableaction.setFilterPredicate(this.dataSource);
-    this.tableaction.filterInitiate(this.columnsGroup, this.dataSource);
-
+    this.tablefiltering();
   }
 
-  // validateRows(cells: any) {
-  //   let RowIsEmpty;
-  //   for (var j = 0; j < cells.length; j++) {
-  //     if (cells[j] == "" || cells[j] == "\r") {
-  //       console.log("emptyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-  //       RowIsEmpty = true;
-  //       break;
-  //     }
-  //   }
-  //   if (RowIsEmpty) {
-  //     return true;
-  //   } else {
-  //     return false;
-
-  //   }
-
-  // }
-
-
-
+  tablefiltering() {
+    this.tableaction.setFilterPredicate(this.dataSource);
+    let group = {}
+    if (this.columns) {
+      this.columns.forEach(input_template => {
+        group[input_template.name] = new FormControl('');
+      })
+    }
+    this.columnsGroup = new FormGroup(group);
+    this.tableaction.filterInitiate(this.columnsGroup, this.dataSource);
+  }
+ 
   bulkuploadRecordInsert(row: any) {
+    let formattedAmount = this.currencyPipe.transform(row.billingAmount.replace('$',''), 'USD', true);
     if (this.dataSource.data.length !== 0) {
       this.dataSource.data.filter((value, key) => {
-        if (value.DriverId == row.DriverId) {
-          value.DriverId = row.DriverId;
-          value.Drivername = row.Drivername;
-          value.BillingAmount = row.BillingAmount;
-          value.Status = row.Status;
-          value.BillingDate = this.recordDate;
-          value.Contract = row.Contract;
-          value.Unit = row.Unit;
+        if (value.driverId === row.driverId) {
+          value.driverId = row.driverId;
+          value.driverName = row.driverName;
+          value.billingAmount = formattedAmount;
+          value.status = row.status;
+          value.billingDate = this.recordDate;
+          value.contract = row.contract;
+          value.unit = row.unit;
           this.Rowexist = true;
         }
       });
       if (!this.Rowexist) {
         this.csvRowInserted++;
-        this.tableaction.pushNewrecords(row, this.dataSource);
-        this.triggerAction();
+        this.pushNewrecords(row);
       } else {
         this.Rowexist = false;
         this.csvRowUpdate++;
         this.triggerAction();
       }
     } else if (this.dataSource.data.length === 0) {
-      this.tableaction.pushNewrecords(row, this.dataSource);
-      this.triggerAction();
+      this.pushNewrecords(row);
     }
     return true;
+
+  }
+
+  pushNewrecords(row: any) {
+    let formattedAmount = this.currencyPipe.transform(row.billingAmount.replace('$',''), 'USD', true);
+    this.dataSource.data.push({
+      driverName: row.driverName,
+      driverId: row.driverId,
+      billingAmount: formattedAmount,
+      status: "Active",
+      billingDate: this.recordDate,
+      contract: row.contract,
+      unit: row.unit
+    });
+    this.triggerAction();
 
   }
 
 
 
   fileupload(input: any) {
-
     const reader = new FileReader();
     reader.readAsText(input.target.files[0]);
     this.selectedFile = input.target.files[0];
@@ -201,7 +152,6 @@ export class DynamictableComponent implements OnInit {
 
   csvJSON(csvText) {
     var lines = csvText.split("\n");
-    //var lines=csvText.split(/\r\n|\n|\r/);
     var result = [];
 
     var headers = lines[0].split(",");
@@ -212,16 +162,6 @@ export class DynamictableComponent implements OnInit {
 
       var obj = {};
       var currentline = lines[i].split(",");
-      // this.validateCSVRows = this.validateRows(currentline);
-
-      // if (this.validateCSVRows) {
-      //   this.displayMsg = true;
-      //   this.displayContent = "Please Fill All the Rows in the CSV";
-      //   setTimeout(() => {
-      //     this.displayMsg = false;
-      //   }, 3000);
-      //   break;
-      // } 
       for (var j = 0; j < headers.length; j++) {
         obj[headers[j].trim()] = currentline[j].trim();
       }
@@ -241,27 +181,6 @@ export class DynamictableComponent implements OnInit {
       this.csvRowUpdate = 0; this.csvRowInserted = 0;
     }, 5000);
   }
-  parentEventHandlerFunction(valueEmitted: any) {
-    this.valueEmittedFromChildComponent = valueEmitted;
-    console.log("parentEventHandlerFunction ::", this.valueEmittedFromChildComponent);
-    let newData: MCElement = {
-      "DriverId": this.valueEmittedFromChildComponent.DriverId,
-      "Drivername": this.valueEmittedFromChildComponent.Drivername,
-      "BillingAmount": this.valueEmittedFromChildComponent.BillingAmount,
-      "Status": this.valueEmittedFromChildComponent.Status,
-      "BillingDate": this.recordDate,
-      "Unit": this.valueEmittedFromChildComponent.Unit,
-      "Contract": this.valueEmittedFromChildComponent.Contract
-
-    };
-
-    this.dataSource.data.push(newData);
-    this.showMCCreatePage = false;
-    this.triggerAction();
-    this.router.navigate(["/dynamictable"]);
-
-  }
-
 
   openDialog(action: any, obj: any) {
     obj.action = action;
@@ -320,7 +239,6 @@ export class DynamictableComponent implements OnInit {
     }
 
   }
-
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {

@@ -8,7 +8,7 @@
     <mat-form-field class="example-full-width">
       <mat-label>Issue Money To</mat-label>
       <input matInput placeholder="payee name" required formControlName="Drivername" name="Drivername" fxFlex="50"
-        [(ngModel)]="local_data.Drivername">
+        [(ngModel)]="local_data.driverName">
       <mat-error *ngIf="f.Drivername.invalid">
         <!--   && (f.Drivername.dirty || f.Drivername.touched)"  -->
         <mat-error *ngIf="f.Drivername.errors.required">
@@ -25,7 +25,7 @@
 
     <mat-form-field class="example-full-width">
       <mat-label>Select Contract</mat-label>
-      <mat-select formControlName="contract" [(ngModel)]="local_data.Contract" name="contract" required>
+      <mat-select formControlName="contract" [(ngModel)]="local_data.contract" name="contract" required>
         <mat-option *ngFor="let contract of Contracts" [value]="contract.contractname">
           {{contract.contractname}}
         </mat-option>
@@ -39,7 +39,7 @@
 
     <mat-form-field class="example-full-width">
       <input matInput placeholder="Amount" required formControlName="BillingAmount"
-        [(ngModel)]="local_data.BillingAmount" name="Amount">
+        [(ngModel)]="local_data.billingAmount" name="Amount">
       <mat-error *ngIf="f.BillingAmount.invalid">
         <mat-error *ngIf="f.BillingAmount.errors.required">
           BillingAmount is required.
@@ -53,11 +53,11 @@
     <mat-form-field class="example-full-width">
       <div mat-dialog-content *ngIf="action == 'Add' ; else readOnlyTemplate">
         <input matInput placeholder="Driver Id" required formControlName="DriverId" name="DriverId"
-          [(ngModel)]="local_data.DriverId">
+          [(ngModel)]="local_data.driverId">
       </div>
       <ng-template #readOnlyTemplate>
         <input matInput placeholder="Driver Id" required formControlName="DriverId" name="DriverId"
-          [(ngModel)]="local_data.DriverId" readonly>
+          [(ngModel)]="local_data.driverId" readonly>
       </ng-template>
       <mat-error *ngIf="f.DriverId.invalid">
         <mat-error *ngIf="f.DriverId.errors.required">
@@ -76,7 +76,7 @@
 
     <mat-form-field class="example-full-width">
       <mat-label>Select Status</mat-label>
-      <mat-select formControlName="status" [(ngModel)]="local_data.Status" name="status" required>
+      <mat-select formControlName="status" [(ngModel)]="local_data.status" name="status" required>
         <mat-option *ngFor="let stat of Statuses" [value]="stat.status">
           {{stat.status}}
         </mat-option>
@@ -89,7 +89,7 @@
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-      <input matInput placeholder="Unit" required formControlName="Unit" [(ngModel)]="local_data.Unit" name="Unit">
+      <input matInput placeholder="Unit" required formControlName="Unit" [(ngModel)]="local_data.unit" name="Unit">
       <mat-error *ngIf="f.Unit.invalid">
         <mat-error *ngIf="f.Unit.errors.required">
           Unit is required.

@@ -1,31 +1,33 @@
 import { SelectionModel } from "@angular/cdk/collections";
-import { DatePipe } from "@angular/common";
+import { CurrencyPipe, DatePipe } from "@angular/common";
 import { MatTableDataSource } from "@angular/material/table";
 import { MCElement } from "../Interfaces/mcelement";
 import { DynamictableComponent } from "./dynamictable.component";
 
 export class tableActionComponent {
   filterValues = {
-    DriverId: "",
-    Contract: "",
-    Drivername: "",
-    BillingAmount: "",
-    Unit: "",
-    Status: ""
+    driverId: "",
+    contract: "",
+    driverName: "",
+    billingAmount: "",
+    unit: "",
+    status: ""
   };
   currentDate = new Date();
   datasourceObject: any;
   recordDate;
-  constructor(private datePipe: DatePipe) {
+  constructor(private datePipe: DatePipe,private currencyPipe: CurrencyPipe) {
     this.recordDate = this.datePipe.transform(this.currentDate, 'MMM d, y, h:mm:ss a');
   }
 
+  
   filterInitiate(columnsGroup, dataSource) {
+    if(columnsGroup)
     columnsGroup.valueChanges.subscribe(value => {
       const filter = {
-        ...value, Status: value.Status.trim().toLowerCase(), Unit: value.Unit.trim().toLowerCase(),
-        Drivername: value.Drivername.trim().toLowerCase(), DriverId: value.DriverId.trim().toLowerCase(),
-        Contract: value.Contract.trim().toLowerCase(), BillingAmount: value.BillingAmount.trim().toLowerCase()
+        ...value, status: value.status.trim().toLowerCase(), unit: value.unit.trim().toLowerCase(),
+        driverName: value.driverName.trim().toLowerCase(), driverId: value.driverId.trim().toLowerCase(),
+        contract: value.contract.trim().toLowerCase(), billingAmount: value.billingAmount.trim().toLowerCase()
       } as string;
       console.log("filter ::", filter);
       dataSource.filter = filter;
@@ -36,12 +38,12 @@ export class tableActionComponent {
 
   setFilterPredicate(dataSource) {
     dataSource.filterPredicate = ((data, filter) => {
-      const a = !filter.Status || data.Status.toLowerCase().includes(filter.Status);;
-      const b = !filter.Drivername || data.Drivername.toLowerCase().includes(filter.Drivername);
-      const c = !filter.Unit || data.Unit.toLowerCase().includes(filter.Unit);
-      const d = !filter.DriverId || data.DriverId.toLowerCase().includes(filter.DriverId);;
-      const e = !filter.Contract || data.Contract.toLowerCase().includes(filter.Contract);
-      const f = !filter.BillingAmount || data.BillingAmount.toLowerCase().includes(filter.BillingAmount);
+      const a = !filter.status || data.status.toLowerCase().includes(filter.status);;
+      const b = !filter.driverName || data.driverName.toLowerCase().includes(filter.driverName);
+      const c = !filter.unit || data.unit.toLowerCase().includes(filter.unit);
+      const d = !filter.driverId || data.driverId.toLowerCase().includes(filter.driverId);;
+      const e = !filter.contract || data.contract.toLowerCase().includes(filter.contract);
+      const f = !filter.billingAmount || data.billingAmount.toLowerCase().includes(filter.billingAmount);
       return a && b && c && d && e && f;
     }) as (MCElement, string) => boolean;
 
@@ -49,40 +51,41 @@ export class tableActionComponent {
 
   deleteRowData(row_obj: any, dataSource) {
     dataSource.data = dataSource.data.filter((value, key) => {
-      return value.DriverId != row_obj.DriverId;
+      return value.driverId != row_obj.driverId;
     });
 
   }
 
   addRowData(row_obj: any, dataSource) {
-
+    let formattedAmount = this.currencyPipe.transform(row_obj.billingAmount.replace('$',''), 'USD', true);
     dataSource.data.push({
-      Drivername: row_obj.Drivername,
-      DriverId: row_obj.DriverId,
-      BillingAmount: row_obj.BillingAmount,
-      Status: "Active",
-      BillingDate: this.recordDate,
-      Contract: row_obj.Contract,
-      Unit: row_obj.Unit
+      driverName: row_obj.driverName,
+      driverId: row_obj.driverId,
+      billingAmount: formattedAmount,
+      status: "Active",
+      billingDate: this.recordDate,
+      contract: row_obj.contract,
+      unit: row_obj.unit
     });
 
   }
 
   updateRowData(row_obj: any, dataSource) {
+    let formattedAmount = this.currencyPipe.transform(row_obj.billingAmount.replace('$',''), 'USD', true);
 
     dataSource.data = dataSource.data.filter((value, key) => {
-      if (value.DriverId == row_obj.DriverId) {
-        value.DriverId = row_obj.DriverId;
-        value.Drivername = row_obj.Drivername;
-        value.BillingAmount = row_obj.BillingAmount;
-        value.Status = row_obj.Status;
-        value.BillingDate = this.recordDate;
-        if (row_obj.Contract.Contractname) {
-          value.Contract = row_obj.Contract;
+      if (value.driverId == row_obj.driverId) {
+        value.driverId = row_obj.driverId;
+        value.driverName = row_obj.driverName;
+        value.billingAmount = formattedAmount;
+        value.status = row_obj.status;
+        value.billingDate = this.recordDate;
+        if (row_obj.contract.contractname) {
+          value.contract = row_obj.contract;
         } else {
-          value.Contract = row_obj.Contract;
+          value.contract = row_obj.contract;
         }
-        value.Unit = row_obj.Unit;
+        value.unit = row_obj.unit;
 
       }
 
@@ -90,18 +93,7 @@ export class tableActionComponent {
     });
   }
 
-  pushNewrecords(row: any, dataSource) {
-    dataSource.data.push({
-      Drivername: row.Drivername,
-      DriverId: row.DriverId,
-      BillingAmount: row.BillingAmount,
-      Status: "Active",
-      BillingDate: this.recordDate,
-      Contract: row.Contract,
-      Unit: row.Unit
-    });
-
-  }
+ 
 
   removeSelectedRows(dataSource, selection) {
 

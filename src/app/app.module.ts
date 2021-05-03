@@ -7,23 +7,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MaterialModule } from './material/material.module';
-import { MoneycodeComponent } from './moneycode/moneycode.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DynamictableComponent } from './dynamictable/dynamictable.component';
 import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 import { MatTableExporterModule } from 'mat-table-exporter';
-import { DynamicTableModule } from 'material-dynamic-table';
+import { TableComponent } from './table/table.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    MoneycodeComponent,
     DynamictableComponent,
-    DialogBoxComponent
+    DialogBoxComponent,
+    TableComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +37,7 @@ import { DynamicTableModule } from 'material-dynamic-table';
     MatPaginatorModule,
     MatCheckboxModule,
     MatTableExporterModule,
-    DynamicTableModule
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
