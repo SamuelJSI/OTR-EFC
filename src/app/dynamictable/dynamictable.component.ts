@@ -52,11 +52,6 @@ export class DynamictableComponent implements OnInit {
     this.actualPaginator = value;
   }
 
-  @ViewChild(MatSort) sort!: MatSort;
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-  }
-
   @ViewChild(MatTableExporterDirective)
   matTableExporter: MatTableExporterDirective;
 
@@ -64,8 +59,13 @@ export class DynamictableComponent implements OnInit {
 
   @ViewChild('fileInput')
   fileInput: ElementRef;
-
   columnsGroup: FormGroup;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+    this.HiddenColumnsInExporting();
+  }
 
   constructor(
     fb: FormBuilder,
@@ -96,10 +96,21 @@ export class DynamictableComponent implements OnInit {
       this.displayedColumns = this.columns.map((col) => col.name);
     }
     console.log('MCDataObject Initial ::', this.dataSource.data);
+
     this.tablefiltering();
   }
+  HiddenColumnsInExporting(){
+    let hiddenclumn:any = this.matTableExporter.hiddenColumns;
+    if (this.columns) {
+      this.columns.forEach((column, index) => {
+        if(!column.exportable){
+          hiddenclumn.push(index);
+        }
+      })
+    }
+    console.log("this.matTableExporter.hiddenColumns ==",this.matTableExporter.hiddenColumns);
+  }
   exportCSV() {
-    console.log("this.matTableExporter.toggleRow.length. ==",this.matTableExporter.toggleRow.length);
     this.matTableExporter.exportTable('csv');
   }
   toCamelCase(sentenceCase) {

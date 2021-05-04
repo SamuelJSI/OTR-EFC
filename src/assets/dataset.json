@@ -5,7 +5,6 @@
       "type": "string",
       "sortable":false,
       "filterable":false,
-      "exportHiddenIndex":0,
       "exportable":false
     },
     {
@@ -14,7 +13,6 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":1,
       "exportable":true
     },
     {
@@ -23,7 +21,6 @@
       "type": "string",
       "sortable":false,
       "filterable":true,
-      "exportHiddenIndex":2,
       "exportable":true
     },
     {
@@ -32,7 +29,6 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":3,
       "exportable":true
     },
     {
@@ -41,7 +37,6 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":4,
       "exportable":true
     },
     {
@@ -50,7 +45,6 @@
       "type": "string",
       "sortable":true,
       "filterable":false,
-      "exportHiddenIndex":5,
       "exportable":true
     },
     {
@@ -59,7 +53,6 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":6,
       "exportable":true
     },
     {
@@ -68,7 +61,6 @@
       "type": "string",
       "sortable":false,
       "filterable":false,
-      "exportHiddenIndex":7,
       "exportable":false
     }
   ]

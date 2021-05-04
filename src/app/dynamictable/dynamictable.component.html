@@ -57,7 +57,7 @@
         </table>
     <!-- Moneycode Data table -->
         <table mat-table [dataSource]="dataSource" matSort matTableFilter matTableExporter class="mat-elevation-z8"
-            #exporter="matTableExporter" [hiddenColumns]="[0,7]">
+            #exporter="matTableExporter" [hiddenColumns]="[]">
             <ng-container matColumnDef="{{column.name}}" *ngFor="let column of columns">
                 <div *ngIf="column.name != 'select' && column.name != 'action'">
                     <ng-container *ngIf="column.sortable; else noSort">

@@ -54,16 +54,12 @@ export class tableActionComponent {
   }
 
   addRowData(row_obj: any, dataSource) {
-    let formattedAmount = this.currencyPipe.transform(
-      row_obj.billingAmount.replace('$', ''),
-      'USD',
-      true
-    );
+    let formattedAmount = row_obj.billingAmount.replace('$', '');
     dataSource.data.push({
       driverName: row_obj.driverName,
       driverId: row_obj.driverId,
       billingAmount: formattedAmount,
-      status: 'Active',
+      status: row_obj.status,
       billingDate: this.recordDate,
       contract: row_obj.contract,
       unit: row_obj.unit,
