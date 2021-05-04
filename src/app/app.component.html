@@ -6,38 +6,34 @@
       </button>
       <h1>OTR EFS</h1>
       <span class="menu-spacer"></span>
-
-        <button mat-button [matMenuTriggerFor]="menuHero" color="primary"  class="profilebutton"
-          ng-init><mat-icon>account </mat-icon>Profile</button>
-        <mat-menu #menuHero="matMenu" class="uxg-user-profile">
-          <div class="uxg-menu-header">
-            <div class="uxg-avatar-hero-block">
-              <div class="uxg-avatar" large>{{loggedInUser}}</div>
-            </div>
+      <button mat-button [matMenuTriggerFor]="menuHero" color="primary" class="profilebutton" ng-init>
+        <mat-icon>account</mat-icon>Profile
+      </button>
+      <mat-menu #menuHero="matMenu" class="uxg-user-profile">
+        <div class="uxg-menu-header">
+          <div class="uxg-avatar-hero-block">
+            <div class="uxg-avatar" large>{{loggedInUser}}</div>
           </div>
-          <mat-divider></mat-divider>
-          <div class="uxg-menu-footer">
-            <button mat-button color="primary" dense (click)="logOutProfile()">
-              <mat-icon>exit_to_app</mat-icon>
-              Logout
-            </button><br>
-          </div>
-        </mat-menu>
-
+        </div>
+        <mat-divider></mat-divider>
+        <div class="uxg-menu-footer">
+          <button mat-button color="primary" dense (click)="logOutProfile()">
+            <mat-icon>exit_to_app</mat-icon>
+            Logout
+          </button><br>
+        </div>
+      </mat-menu>
     </mat-toolbar-row>
-
   </mat-toolbar>
 </div>
 
 <mat-sidenav-container>
-  <mat-sidenav #sidenav style="width:20%">
+  <mat-sidenav #sidenav>
     <mat-nav-list>
-
       <a mat-list-item [routerLink]="'/dynamictable'"> Money Codes </a>
       <a mat-list-item [routerLink]="'/Cards'"> Cards </a>
       <a mat-list-item [routerLink]="'/transactions'"> Transactions </a>
       <a mat-list-item [routerLink]="'/billing'"> Billing </a>
-
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

@@ -5,32 +5,41 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { DialogBoxComponent } from '../dialog-box/dialog-box.component';
 import { MCElement } from '../Interfaces/mcelement';
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
-import { DatePipe,CurrencyPipe } from '@angular/common';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { tableActionComponent } from "./tableaction.component";
+import { tableActionComponent } from './tableaction.component';
 import { TableComponent } from '../table/table.component';
-
-
+import { MatTableExporterDirective } from 'mat-table-exporter';
 
 @Component({
   selector: 'app-dynamictable',
   templateUrl: './dynamictable.component.html',
   styleUrls: ['./dynamictable.component.css'],
-  providers: [DatePipe,CurrencyPipe]
-
+  providers: [DatePipe, CurrencyPipe],
 })
 export class DynamictableComponent implements OnInit {
-  Rowexist: boolean = false; DeleteAll: boolean = false; displayMsg: boolean = false; 
-  selectedFile: any; MCObject: any; 
-  datasourceObject: any; text: any; JSONData: any;
+  Rowexist: boolean = false;
+  DeleteAll: boolean = false;
+  displayMsg: boolean = false;
+  selectedFile: any;
+  MCObject: any;
+  datasourceObject: any;
+  text: any;
+  JSONData: any;
   dataSource: MatTableDataSource<MCElement>;
-  InitialElement: any; recordDate: any; displayNoRecords: any;
+  InitialElement: any;
+  recordDate: any;
+  displayNoRecords: any;
   selection = new SelectionModel<MCElement>(true, []);
   ELEMENT_DATA: MCElement[] = [];
-  currentDate = new Date(); displayContent = ''; tableaction: any;
-  csvRowUpdate = 0; csvRowInserted = 0; valueEmittedFromChildComponent: any;
+  currentDate = new Date();
+  displayContent = '';
+  tableaction: any;
+  csvRowUpdate = 0;
+  csvRowInserted = 0;
+  valueEmittedFromChildComponent: any;
   @Input() columns: any;
   displayedColumns: any[];
 
@@ -48,49 +57,99 @@ export class DynamictableComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  @ViewChild(MatTableExporterDirective)
+  matTableExporter: MatTableExporterDirective;
+
   @ViewChild('alert', { static: true }) alert: ElementRef;
 
   @ViewChild('fileInput')
-  fileInputVariable: ElementRef;
-
+  fileInput: ElementRef;
 
   columnsGroup: FormGroup;
 
-  constructor(fb: FormBuilder, private currencyPipe: CurrencyPipe,private datePipe: DatePipe, public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {
-    this.recordDate = this.datePipe.transform(this.currentDate, 'MMM d, y, h:mm:ss a');
-    this.tableaction = new tableActionComponent(datePipe,currencyPipe);
-    this.InitialElement = localStorage.getItem("datasourceObject");
+  constructor(
+    fb: FormBuilder,
+    private currencyPipe: CurrencyPipe,
+    private datePipe: DatePipe,
+    public dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.recordDate = this.datePipe.transform(
+      this.currentDate,
+      'MMM d, y, h:mm:ss a'
+    );
+    this.tableaction = new tableActionComponent(datePipe, currencyPipe);
+    this.InitialElement = localStorage.getItem('datasourceObject');
     this.MCObject = JSON.parse(this.InitialElement);
     if (this.MCObject && this.MCObject.length !== 0) {
       this.dataSource = new MatTableDataSource<MCElement>(this.MCObject);
     } else {
+      this.selection.clear();
       this.dataSource = new MatTableDataSource<MCElement>(this.ELEMENT_DATA);
     }
   }
 
   ngOnInit(): void {
     if (this.columns) {
-      console.log("MCDataObject coulmns ::", this.columns);
-      this.displayedColumns = this.columns.map(col => col.name);
+      console.log('MCDataObject coulmns ::', this.columns);
+      this.displayedColumns = this.columns.map((col) => col.name);
     }
-    console.log("MCDataObject Initial ::", this.dataSource.data);
+    console.log('MCDataObject Initial ::', this.dataSource.data);
     this.tablefiltering();
   }
+  exportCSV() {
+    console.log("this.matTableExporter.toggleRow.length. ==",this.matTableExporter.toggleRow.length);
+    this.matTableExporter.exportTable('csv');
+  }
+  toCamelCase(sentenceCase) {
+    var out = '';
+    sentenceCase.split(' ').forEach(function (el, idx) {
+      var add = el.toLowerCase();
+      out += idx === 0 ? add : add[0].toUpperCase() + add.slice(1);
+    });
+    return out;
+  }
 
-  tablefiltering() {
+   tablefiltering() {
     this.tableaction.setFilterPredicate(this.dataSource);
-    let group = {}
+    let group = {};
     if (this.columns) {
-      this.columns.forEach(input_template => {
+      this.columns.forEach((input_template, index) => {
         group[input_template.name] = new FormControl('');
-      })
+      });
     }
     this.columnsGroup = new FormGroup(group);
-    this.tableaction.filterInitiate(this.columnsGroup, this.dataSource);
+      this.filterInitiate(this.columnsGroup, this.dataSource);
   }
- 
+
+  filterInitiate(columnsGroup, dataSource) {
+    if (columnsGroup)
+      columnsGroup.valueChanges.subscribe((value) => {
+        const filter = {
+          ...value,
+          status: value.status.trim().toLowerCase(),
+          unit: value.unit.trim().toLowerCase(),
+          driverName: value.driverName.trim().toLowerCase(),
+          driverId: value.driverId.trim().toLowerCase(),
+          contract: value.contract.trim().toLowerCase(),
+          billingAmount: value.billingAmount.trim().toLowerCase(),
+        } as string;
+        dataSource.filter = filter;
+        if (dataSource.filteredData.length === 0) { 
+            this.displayNoRecords = true;
+        }else{
+          this.displayNoRecords = false;
+        }
+      });
+  }
+  isNumber(e) {
+    return typeof e === 'number';
+  }
+
   bulkuploadRecordInsert(row: any) {
-    let formattedAmount = this.currencyPipe.transform(row.billingAmount.replace('$',''), 'USD', true);
+    let formattedAmount;
+    formattedAmount = row.billingAmount.replace('$', '');
     if (this.dataSource.data.length !== 0) {
       this.dataSource.data.filter((value, key) => {
         if (value.driverId === row.driverId) {
@@ -106,35 +165,20 @@ export class DynamictableComponent implements OnInit {
       });
       if (!this.Rowexist) {
         this.csvRowInserted++;
-        this.pushNewrecords(row);
+        this.tableaction.pushNewrecords(row, this.dataSource);
+        this.triggerAction();
       } else {
         this.Rowexist = false;
         this.csvRowUpdate++;
         this.triggerAction();
       }
     } else if (this.dataSource.data.length === 0) {
-      this.pushNewrecords(row);
+      this.tableaction.pushNewrecords(row, this.dataSource);
+      this.triggerAction();
     }
+    this.fileInput.nativeElement.value = '';
     return true;
-
   }
-
-  pushNewrecords(row: any) {
-    let formattedAmount = this.currencyPipe.transform(row.billingAmount.replace('$',''), 'USD', true);
-    this.dataSource.data.push({
-      driverName: row.driverName,
-      driverId: row.driverId,
-      billingAmount: formattedAmount,
-      status: "Active",
-      billingDate: this.recordDate,
-      contract: row.contract,
-      unit: row.unit
-    });
-    this.triggerAction();
-
-  }
-
-
 
   fileupload(input: any) {
     const reader = new FileReader();
@@ -144,26 +188,22 @@ export class DynamictableComponent implements OnInit {
     reader.onload = () => {
       let text = reader.result;
       this.text = text;
-      //console.log("text::", text);
       this.csvJSON(text);
     };
-
   }
 
   csvJSON(csvText) {
-    var lines = csvText.split("\n");
+    var lines = csvText.split('\n');
     var result = [];
-
-    var headers = lines[0].split(",");
+    var headers = lines[0].split(',');
     console.log(headers);
     console.log(lines.length);
 
     for (var i = 1; i < lines.length - 1; i++) {
-
       var obj = {};
-      var currentline = lines[i].split(",");
+      var currentline = lines[i].split(/,+|"[^"]+"/g);
       for (var j = 0; j < headers.length; j++) {
-        obj[headers[j].trim()] = currentline[j].trim();
+        obj[this.toCamelCase(headers[j].trim())] = currentline[j].trim();
       }
       result.push(obj);
     }
@@ -173,12 +213,18 @@ export class DynamictableComponent implements OnInit {
       this.bulkuploadRecordInsert(row);
     }
     this.selectedFile = '';
-    this.fileInputVariable.nativeElement.value = "";
+    this.fileInput.nativeElement.value = '';
     this.displayMsg = true;
-    this.displayContent = this.csvRowInserted + " Record Inserted !! and " + this.csvRowUpdate + " Record Updated !!";
+    this.displayContent =
+      this.csvRowInserted +
+      ' Record Inserted !! and ' +
+      this.csvRowUpdate +
+      ' Record Updated !!';
+    this.selection = new SelectionModel<MCElement>(true, []);
     setTimeout(() => {
       this.displayMsg = false;
-      this.csvRowUpdate = 0; this.csvRowInserted = 0;
+      this.csvRowUpdate = 0;
+      this.csvRowInserted = 0;
     }, 5000);
   }
 
@@ -186,11 +232,10 @@ export class DynamictableComponent implements OnInit {
     obj.action = action;
     const dialogRef = this.dialog.open(DialogBoxComponent, {
       width: '400px',
-      data: obj
+      data: obj,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-
+    dialogRef.afterClosed().subscribe((result) => {
       if (result.event == 'Add') {
         this.tableaction.addRowData(result.data, this.dataSource);
         this.triggerAction();
@@ -204,6 +249,7 @@ export class DynamictableComponent implements OnInit {
         this.triggerAction();
         this.notifyUpdateAlert(result.event);
       } else if (result.event == 'DeleteAll') {
+        this.DeleteAll = true;
         this.tableaction.removeSelectedRows(this.dataSource, this.selection);
         this.triggerAction();
         this.notifyUpdateAlert(result.event);
@@ -217,13 +263,13 @@ export class DynamictableComponent implements OnInit {
   notifyUpdateAlert(action) {
     this.displayMsg = true;
     if (action == 'Update') {
-      this.displayContent = "Money Code Updated!!";
+      this.displayContent = 'Money Code Updated!!';
     } else if (action == 'Add') {
-      this.displayContent = "Money Code Added!!";
+      this.displayContent = 'Money Code Added!!';
     } else if (action == 'Delete') {
-      this.displayContent = "Money Code Deleted!!";
+      this.displayContent = 'Money Code Deleted!!';
     } else if (action == 'DeleteAll') {
-      this.displayContent = "Selected Money Codes Deleted!!";
+      this.displayContent = 'Selected Money Codes Deleted!!';
     }
     setTimeout(() => {
       this.displayMsg = false;
@@ -231,13 +277,16 @@ export class DynamictableComponent implements OnInit {
   }
   triggerAction() {
     this.dataSource = new MatTableDataSource<MCElement>(this.dataSource.data);
-    this.datasourceObject = localStorage.setItem("datasourceObject", JSON.stringify(this.dataSource.data));
+    this.datasourceObject = localStorage.setItem(
+      'datasourceObject',
+      JSON.stringify(this.dataSource.data)
+    );
     this.dataSource.paginator = this.actualPaginator;
     this.dataSource.sort = this.sort;
     if (this.table) {
       this.table.renderRows();
+      this.tablefiltering();
     }
-
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -249,10 +298,8 @@ export class DynamictableComponent implements OnInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
-
-
 }

@@ -1,5 +1,10 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Contract } from '../Interfaces/contract';
 
@@ -11,10 +16,9 @@ export interface UsersData {
 @Component({
   selector: 'app-dialog-box',
   templateUrl: './dialog-box.component.html',
-  styleUrls: ['./dialog-box.component.css']
+  styleUrls: ['./dialog-box.component.css'],
 })
 export class DialogBoxComponent implements OnInit {
-
   action: string;
   local_data: any;
   DeleteAll: boolean = false;
@@ -23,37 +27,54 @@ export class DialogBoxComponent implements OnInit {
   Contracts: Contract[] = [
     { contractNumber: '149089', contractname: 'Electronic Fund Source' },
     { contractNumber: '567890', contractname: 'Bob big Lots deliveries' },
-    { contractNumber: '987890', contractname: 'Bob vance Refrigered Deliveries' }
+    { contractNumber: '987890', contractname: 'Bob vance Refrigered Deliveries'}
   ];
 
   Statuses: any[] = [
-    { status: 'Active',id:'1' },
-    { status: 'Expired',id:'2'},
-    {status: 'Used',id:'3'},
-    {status: 'Voided',id:'4'}
+    { status: 'Active', id: '1' },
+    { status: 'Expired', id: '2' },
+    { status: 'Used', id: '3' },
+    { status: 'Voided', id: '4' },
   ];
   moneycodeForm!: FormGroup;
 
   ngOnInit(): void {
-
     this.moneycodeForm = this.fb.group({
-      Drivername: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]*'), Validators.maxLength(20)]],
+      Drivername: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('[a-zA-Z0-9]*'),
+          Validators.maxLength(20),
+        ],
+      ],
       contract: ['', [Validators.required]],
-      BillingAmount: ['', [Validators.required, Validators.pattern('[0-9.,$]*')]],
-      DriverId: ['', [Validators.required, Validators.pattern('[0-9]*'), Validators.maxLength(7)]],
+      BillingAmount: [
+        '',
+        [Validators.required, Validators.pattern('[0-9.,$]*')],
+      ],
+      DriverId: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('[0-9]*'),
+          Validators.maxLength(7),
+        ],
+      ],
       Unit: ['', [Validators.required]],
-      status: ['', [Validators.required]]
-
+      status: ['', [Validators.required]],
     });
   }
 
   constructor(
     public dialogRef: MatDialogRef<DialogBoxComponent>,
     //@Optional() is used to prevent error if no data is passed
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: UsersData, public fb: FormBuilder) {
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: UsersData,
+    public fb: FormBuilder
+  ) {
     //console.log(data);
     this.local_data = { ...data };
-    console.log("local_data :: ", this.local_data);
+    console.log('local_data :: ', this.local_data);
     this.action = this.local_data.action;
   }
 
@@ -69,12 +90,11 @@ export class DialogBoxComponent implements OnInit {
     }
   }
 
-  get f() { return this.moneycodeForm.controls; }
+  get f() {
+    return this.moneycodeForm.controls;
+  }
 
   closeDialog() {
     this.dialogRef.close({ event: 'Cancel' });
   }
-
-
-
 }

@@ -1,65 +1,64 @@
 table {
-    width: 100%;
-    border: 0px solid black;
-    background-color: #e3dede;
-    overflow-x: none;
-  }
- 
-  .tablepostion{
-    position:right;
-    padding-left: 0px;
-    border-color: black;
-    margin-bottom: -25px;
-    background-color: #e3dede;
-  }
-  
-  .mat-header-cell{
-    color:black; 
-    font-size:13px;
-  }
-
-  .mat-menu-panel {
-    min-width: 90px;
-    max-height: 96px;  
- }
-.mat-form-field{
-  width: 400px;
+  width: 100%;
+  border: 0px solid black;
+  background-color: #e3dede;
+  overflow-x: none;
 }
-.mat-card{
-  height:100px;
+
+.tablepostion {
+  position: right;
+  padding-left: 0px;
+  border-color: black;
+  margin-bottom: -25px;
+  background-color: #e3dede;
+}
+
+.textalignCenter {
   text-align: center;
 }
-.actionButtons{
+.textalignLeft {
+  text-align: left;
+}
+
+.mat-header-cell {
+  color: black;
+  font-size: 13px;
+}
+
+.mat-card {
+  height: 100px;
+  text-align: center;
+}
+
+.actionButtons {
   margin-right: 400px;
+}
+
+.matbuttons{
+  background-color:  rgb(4, 49, 117);
 }
 
 button.mat-focus-indicator.mat-button.mat-button-base.mat-primary {
   background-color: #ccc7c7;
 }
-/* 
-.mat-cell{
-  text-align: center;
-} */
-mat-menu-item{
-  width:30%
-}
+
 ::ng-deep .hided-arrow .mat-sort-header-arrow {
   color: red;
   height: 15px;
 }
-.mctitle{
+
+.mctitle {
   font-weight: 600;
   position: center;
-  margin-left: 600px;
+  margin-left: 50px;
 }
 
-.actionbuttons{
+.actionbuttons {
   margin-left: 500px;
 }
 
-
-.alert-success{
-  width:30%;
+.alert-success {
+  width: 30%;
   margin-left: 470px;
   position: absolute;
 }
@@ -68,25 +67,38 @@ mat-menu-item{
   max-height: calc(100vh - 155px);
   overflow-y: auto;
   overflow-x: hidden;
+}
 
+.uploadfile {
+  background-color:  rgb(4, 49, 117);
+  font-size: 12px;
 }
-.uploadfile{
-  background-color: #3f51b5;
-  font-size:12px
-}
-.Multiplecolumfilter{
+
+.Multiplecolumfilter {
   margin-top: 60px;
-  width:100%;
+  width: 100%;
   margin-right: -140px;
-  cursor:auto;
+  cursor: auto;
 }
-.filterTable{
-  background-color:#e3dede ;
+
+.filterTable {
+  background-color: #e3dede;
   margin-top: 0px;
   margin-left: 50px;
 }
 
-.actionRow{
-  margin-bottom: -29px;
-
+.actionRow {
+  margin-bottom: 0px;
+}
+.columnSearch {
+  width: 170px;
+}
+.fiterString {
+  color: purple;
+}
+.fileUpload {
+  width: 20%;
+  margin-right: 10px;
+  margin-bottom: -30px;
+  float: right;
 }

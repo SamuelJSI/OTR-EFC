@@ -8,16 +8,15 @@
                     <mat-label>Username</mat-label>
                     <input matInput placeholder="Username" formControlName="Username" [(ngModel)]="user.Username"
                         required>
-                        <mat-error *ngIf="f.Username.invalid">
-                            <mat-error *ngIf="f.Username.errors.required">
-                              Username is required.
-                            </mat-error>
-                            
-                            <mat-error *ngIf="f.Username.errors.maxlength">
-                                Username must be Not more than 20 chars.
-                            </mat-error>
-                          </mat-error>
-                    
+                    <mat-error *ngIf="f.Username.invalid">
+                        <mat-error *ngIf="f.Username.errors.required">
+                            Username is required.
+                        </mat-error>
+
+                        <mat-error *ngIf="f.Username.errors.maxlength">
+                            Username must be Not more than 20 chars.
+                        </mat-error>
+                    </mat-error>
                 </mat-form-field><br><br>
 
                 <mat-form-field appearance="fill">
@@ -33,11 +32,10 @@
                             password is required.
                         </mat-error>
                         <mat-error *ngIf="f.password.errors.pattern">
-                            Password should be Minimum eight characters, at least one uppercase, one number and one special character
+                            Password should be Minimum eight characters, at least one uppercase, one number and one
+                            special character
                         </mat-error>
-                        
-                      </mat-error>
-                  
+                    </mat-error>
                 </mat-form-field>
                 <br><br>
             </mat-card-content>

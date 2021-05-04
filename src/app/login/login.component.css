@@ -1,22 +1,19 @@
-
-
-  mat-form-field{
-    width: 500px;
+mat-form-field {
+  width: 500px;
 }
-mat-card-title{
-    text-align: center;
+mat-card-title {
+  text-align: center;
 }
-mat-card-content{
+mat-card-content {
   margin-left: 150px;
 }
-mat-card{
-  width:60%;
+mat-card {
+  width: 60%;
   margin-left: 300px;
 }
 
-mat-card-actions{
+mat-card-actions {
   margin-left: 300px;
-
 }
 
 mat-card.mat-card.mat-focus-indicator {

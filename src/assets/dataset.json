@@ -5,7 +5,8 @@
       "type": "string",
       "sortable":false,
       "filterable":false,
-      "exportHiddenIndex":0
+      "exportHiddenIndex":0,
+      "exportable":false
     },
     {
       "name": "driverId",
@@ -13,7 +14,8 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":1
+      "exportHiddenIndex":1,
+      "exportable":true
     },
     {
       "name": "contract",
@@ -21,8 +23,8 @@
       "type": "string",
       "sortable":false,
       "filterable":true,
-      "exportHiddenIndex":2
-
+      "exportHiddenIndex":2,
+      "exportable":true
     },
     {
       "name": "driverName",
@@ -30,8 +32,8 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":3
-
+      "exportHiddenIndex":3,
+      "exportable":true
     },
     {
       "name": "billingAmount",
@@ -39,8 +41,8 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":4
-
+      "exportHiddenIndex":4,
+      "exportable":true
     },
     {
       "name": "unit",
@@ -48,8 +50,8 @@
       "type": "string",
       "sortable":true,
       "filterable":false,
-      "exportHiddenIndex":5
-
+      "exportHiddenIndex":5,
+      "exportable":true
     },
     {
       "name": "status",
@@ -57,8 +59,8 @@
       "type": "string",
       "sortable":true,
       "filterable":true,
-      "exportHiddenIndex":6
-
+      "exportHiddenIndex":6,
+      "exportable":true
     },
     {
       "name": "action",
@@ -66,7 +68,7 @@
       "type": "string",
       "sortable":false,
       "filterable":false,
-      "exportHiddenIndex":7
-
+      "exportHiddenIndex":7,
+      "exportable":false
     }
   ]

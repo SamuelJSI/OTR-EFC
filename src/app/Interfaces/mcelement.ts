@@ -1,7 +1,7 @@
 export interface MCElement {
     driverName: string;
     driverId: string;
-    billingAmount: string;
+    billingAmount: number;
     status: string;
     billingDate: string;
     contract:string;

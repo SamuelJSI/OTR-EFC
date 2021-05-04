@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
+html, body { height: 100%;overflow-x: hidden; width:100%;overflow-y: scroll;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body.mat-typography {
+    overflow-y: hidden;
+}
+html.js-focus-visible {
+    height: 750px;
+}

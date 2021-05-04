@@ -1,13 +1,16 @@
-mat-dialog-content{
-max-width: 300px;
-padding:180px;
+mat-dialog-content {
+  max-width: 300px;
+  padding: 180px;
 }
-.cdk-overlay-pane{
-    max-width: 80vw;
-    width: 385px;
-    position: static;
+.cdk-overlay-pane {
+  max-width: 80vw;
+  width: 385px;
+  position: static;
 }
 
-.mat-form-field{
-    width:350px !important;
- }
+.mat-form-field {
+  width: 350px !important;
+}
+.matbuttons{
+  background-color:  rgb(4, 49, 117);
+}
