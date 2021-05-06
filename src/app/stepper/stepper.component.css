@@ -1,0 +1,51 @@
+.mat-stepper-horizontal-line,
+.mat-step-icon-state-edit,
+.mat-step-icon-state-number {
+  display: none;
+}
+
+.mat-step-header {
+  padding: 0 5px !important;
+  height: auto !important;
+  flex: 1 1;
+}
+
+.mat-step-label {
+  width: 100%;
+}
+
+.mat-step-status-indicator {
+  display: inline-block;
+  height: 5px;
+  width: 100%;
+  background-color: #ccc;
+}
+
+.mat-step-label-active .mat-step-status-indicator {
+  background-color: #5350d8;
+}
+
+.mat-horizontal-stepper-header-container {
+  padding: 15px 20px 15px;
+}
+
+.step-information {
+  padding: 0 25px;
+  margin: 15px 0 15px 0;
+}
+
+span.step-title {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+span.step-index {
+  color: #999;
+}
+
+.next-step-title {
+  color: #999;
+  font-size: 18px;
+  font-weight: bold;
+}

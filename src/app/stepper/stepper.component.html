@@ -1,0 +1,51 @@
+<div fxLayout="row" class="step-information">
+  <div fxFlex>
+    <span class="step-title">
+      {{ currentStep?.label }}
+    </span>
+    <span class="step-index"> {{ currentStepIndex }} of {{ totalSteps }} </span>
+  </div>
+  <div fxFlex fxLayout="row" fxLayoutAlign="end start">
+    <span class="next-step-title" *ngIf="nextStep?.label">
+      Next: {{ nextStep?.label }}
+    </span>
+  </div>
+</div>
+<mat-horizontal-stepper linear #stepper>
+  <mat-step
+    [stepControl]="step.form"
+    [label]="step.label"
+    *ngFor="
+      let step of stepperConents;
+      index as index;
+      first as first;
+      last as last
+    "
+  >
+    <ng-template matStepLabel>
+      <span class="mat-step-status-indicator"> </span>
+    </ng-template>
+    <ng-container [ngTemplateOutlet]="step.template"></ng-container>
+    <div fxLayout="row" fxLayoutAlign="start stretch">
+      <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+        <button mat-stroked-button (click)="stepper.reset()">Cancel</button>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+        <button
+          mat-stroked-button
+          matStepperPrevious
+          *ngIf="!first"
+          class="mr-2"
+        >
+          Previous
+        </button>
+        <button mat-stroked-button matStepperNext *ngIf="!last" color="primary">
+          Next
+        </button>
+        <button mat-stroked-button matStepperNext *ngIf="last" color="primary">
+          Submit
+        </button>
+      </div>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

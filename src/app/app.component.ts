@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
       this.loggedInUser = (
         await this.authenticationService.getUserDetail()
       ).name;
-      this.router.navigate(['/dashboard']);
+      // this.router.navigate(['/dashboard']);
     }
   }
 
@@ -56,6 +56,7 @@ export class AppComponent implements OnInit {
             this.snackBar.open(reason.errorSummary, '', {
               horizontalPosition: 'center',
               verticalPosition: 'top',
+              duration: 5000
             });
             this.isAuthenticated = false;
           }

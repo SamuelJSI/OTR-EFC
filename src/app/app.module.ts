@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -14,6 +15,10 @@ import { DynamictableComponent } from './dynamictable/dynamictable.component';
 import { LoginComponent } from './login/login.component';
 import { MaterialModule } from './material/material.module';
 import { MoneycodeComponent } from './moneycode/moneycode.component';
+import { StepperSampleOneComponent } from './stepper-sample-one/stepper-sample-one.component';
+import { StepperSampleTwoComponent } from './stepper-sample-two/stepper-sample-two.component';
+import { StepperContentDirective } from './stepper/stepper-content.directive';
+import { StepperComponent } from './stepper/stepper.component';
 
 @NgModule({
   declarations: [
@@ -23,19 +28,25 @@ import { MoneycodeComponent } from './moneycode/moneycode.component';
     DynamictableComponent,
     DialogBoxComponent,
     DashboardComponent,
+    StepperComponent,
+    StepperContentDirective,
+    StepperSampleOneComponent,
+    StepperSampleTwoComponent,
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule,
     MaterialModule,
     MatTableModule,
     MatPaginatorModule,
     MatCheckboxModule,
     MatSnackBarModule,
+    FlexLayoutModule,
+    FormsModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [AppComponent],
+  exports: [StepperComponent, StepperContentDirective ],
 })
 export class AppModule {}

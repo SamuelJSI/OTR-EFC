@@ -4,6 +4,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
+  Router,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
@@ -12,7 +13,7 @@ import { AuthenticationService } from './authentication.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -23,11 +24,12 @@ export class AuthGuard implements CanActivate {
     | boolean
     | UrlTree {
     return new Promise<boolean | UrlTree>((resolve, reject) => {
-      this.authenticationService.session.exists().then((status)=>{
-        console.log(status);
-      });
-      this.authenticationService.isAuthenticated().then((status)=>{
-        resolve(status);
+      this.authenticationService.isAuthenticated().then(async (status)=>{
+        if(status) {
+          resolve(true);
+        } else {
+          resolve(this.router.parseUrl('/'));
+        }
       });
     });
   }

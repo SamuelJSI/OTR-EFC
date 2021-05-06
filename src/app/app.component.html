@@ -1,4 +1,9 @@
-<mat-card *ngIf="!isAuthenticated" >
+<mat-card
+  *ngIf="!isAuthenticated"
+  fxFlex
+  fxLayout="column"
+  fxLayoutAlign="center center"
+>
   <mat-card-title>OTR-EFS Login</mat-card-title>
   <form
     [formGroup]="authenticationForm"
@@ -10,81 +15,53 @@
     fxLayoutGap="10px"
   >
     <mat-card-content>
-      <mat-form-field>
-        <mat-label>User Name</mat-label>
-        <input
-          matInput
-          placeholder="User Name"
-          formControlName="userName"
-          required
-        />
-        <mat-error *ngIf="hasError('userName', 'required')"
-          >Name is required</mat-error
-        > </mat-form-field
-      ><br /><br />
-      <mat-form-field>
-        <mat-label>Enter your password</mat-label>
-        <input
-          matInput
-          [type]="revealPassword ? 'text' : 'password'"
-          formControlName="password"
-          required
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="toggleRevealPassword()"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="revealPassword"
-        >
-          <mat-icon>{{
-            revealPassword ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-        <mat-error *ngIf="hasError('password', 'required')"
-          >password is required</mat-error
-        >
-      </mat-form-field>
-      <br /><br />
+      <mat-card fxFlex>
+        <mat-card-content>
+          <mat-form-field>
+            <mat-label>User Name</mat-label>
+            <input
+              matInput
+              placeholder="User Name"
+              formControlName="userName"
+              required
+            />
+            <mat-error *ngIf="hasError('userName', 'required')"
+              >Name is required</mat-error
+            > </mat-form-field
+          ><br /><br />
+          <mat-form-field>
+            <mat-label>Enter your password</mat-label>
+            <input
+              matInput
+              [type]="revealPassword ? 'text' : 'password'"
+              formControlName="password"
+              required
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="toggleRevealPassword()"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="revealPassword"
+            >
+              <mat-icon>{{
+                revealPassword ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+            <mat-error *ngIf="hasError('password', 'required')"
+              >password is required</mat-error
+            >
+          </mat-form-field>
+          <br /><br />
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary">Login</button>
+        </mat-card-actions>
+      </mat-card>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button (click)="login()" color="primary">
-        Login
-      </button>
-    </mat-card-actions>
   </form>
 </mat-card>
-<mat-toolbar color="primary" *ngIf="isAuthenticated">
-  <mat-toolbar-row>
-    <button mat-icon-button>
-      <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
-    </button>
-    <h1>OTR EFS</h1>
-    <span class="menu-spacer"></span>
-    <button
-      fxFlex="1"
-      mat-button
-      [matMenuTriggerFor]="menuHero"
-      color="primary"
-      class="profilebutton"
-      ng-init
-    >
-      <mat-icon>account_circle</mat-icon>
-      {{ loggedInUser }}
-    </button>
-    <mat-menu #menuHero="matMenu" class="uxg-user-profile">
-      <button mat-menu-item>
-        <mat-icon>manage_accounts</mat-icon>
-        <span>Profile</span>
-      </button>
-      <button mat-menu-item (click)="logOutProfile()">
-        <mat-icon>logout</mat-icon>
-        <span>Logout</span>
-      </button>
-    </mat-menu>
-  </mat-toolbar-row>
-</mat-toolbar>
-<mat-sidenav-container>
+<mat-sidenav-container *ngIf="isAuthenticated" fxFlex>
   <mat-sidenav #sidenav>
     <mat-nav-list>
       <a mat-list-item [routerLink]="'/dynamictable'"> Money Codes </a>
@@ -95,6 +72,32 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content *ngIf="isAuthenticated">
+    <mat-toolbar color="primary" *ngIf="isAuthenticated">
+      <mat-toolbar-row flexFill>
+        <div fxLayout="row" fxFlex="50%" fxLayoutAlign="start center">
+          <button mat-icon-button>
+            <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+          </button>
+          <h1>OTR EFS</h1>
+        </div>
+        <div fxLayout="row" fxFlex="50%" fxLayoutAlign="end center">
+          <button mat-button [matMenuTriggerFor]="userMenu">
+            <mat-icon>account_circle</mat-icon>
+            <span class="pl-2">{{ loggedInUser }}</span>
+          </button>
+          <mat-menu #userMenu="matMenu" xPosition="before" yPosition="below">
+            <button mat-menu-item>
+              <mat-icon>manage_accounts</mat-icon>
+              <span>Profile</span>
+            </button>
+            <button mat-menu-item (click)="logOutProfile()">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
