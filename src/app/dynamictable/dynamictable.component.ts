@@ -42,10 +42,10 @@ export class DynamictableComponent implements OnInit {
   valueEmittedFromChildComponent: any;
   @Input() columns: any;
   displayedColumns: any[];
-
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
   actualPaginator!: MatPaginator;
   formControl: any;
+  columnsGroup: FormGroup;
   @ViewChild(MatPaginator)
   set paginator(value: MatPaginator) {
     this.dataSource.paginator = value;
@@ -59,7 +59,6 @@ export class DynamictableComponent implements OnInit {
 
   @ViewChild('fileInput')
   fileInput: ElementRef;
-  columnsGroup: FormGroup;
   @ViewChild(MatSort) sort!: MatSort;
 
   ngAfterViewInit(): void {

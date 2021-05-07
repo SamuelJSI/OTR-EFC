@@ -1,0 +1,15 @@
+<div role="group" class="example-tel-input-container"
+     [formGroup]="emailparts">
+ 
+  <input class="example-tel-input-element"
+         formControlName="gmailusername"
+         aria-label="gmailusername"
+         maxLength="15"
+         #gmailusername>
+  <span class="example-tel-input-spacer">@</span>
+  <input class="example-tel-input-element"
+         formControlName="domain"
+         aria-label="domain"
+         maxLength="10"
+         #domain>
+</div>

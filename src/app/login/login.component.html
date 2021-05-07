@@ -18,7 +18,16 @@
                         </mat-error>
                     </mat-error>
                 </mat-form-field><br><br>
-
+                <mat-form-field appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <!-- <app-customemail-form-field-control matInput formControlName="email" name="email" [(ngModel)]="user.email" required></app-customemail-form-field-control> -->
+                    <app-custom-email-control formControlName="email" (triggerEmail)="getcustomFormValue($event)" [(ngModel)]="user.email" required></app-custom-email-control>
+                    <!-- <app-example-tel-input formControlName="tel"></app-example-tel-input> -->
+                    <mat-icon matSuffix>email</mat-icon>
+                  <mat-hint>Inlude @symbol</mat-hint>
+                  </mat-form-field> 
+                  
+                  <br><br>
                 <mat-form-field appearance="fill">
                     <mat-label>Enter your password</mat-label>
                     <input matInput [type]="hide ? 'password' : 'text'" formControlName="password"
@@ -37,7 +46,8 @@
                         </mat-error>
                     </mat-error>
                 </mat-form-field>
-                <br><br>
+                <br><br> 
+              
             </mat-card-content>
             <mat-card-actions>
                 <button mat-raised-button color="primary">Login</button>
@@ -45,3 +55,8 @@
         </form>
     </mat-card>
 </section>
+
+
+<!-- <div [formGroup]="form">
+   
+  </div> -->

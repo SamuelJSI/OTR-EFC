@@ -1,0 +1,70 @@
+<!-- <div role="group" class="custom-email-input-container"
+     [formGroup]="emailparts" [attr.aria-labelledby]="_formField?.getLabelId()">
+ 
+  <input matInput class="example-tel-input-element"
+         formControlName="useremail" [(ngModel)]="value" 
+         aria-label="useremail" 
+         #useremail (blur)="onblurEvent()">
+
+       
+</div>
+
+<mat-error *ngIf="emailparts.controls.useremail.invalid && emailparts.controls.useremail.touched">
+       <mat-error *ngIf="emailparts.controls.useremail.errors.required">
+           Email is required.
+       </mat-error>
+       <mat-error *ngIf="emailparts.controls.useremail.errors.pattern">
+          Please Enter valid Email.Email must have @ and . symbol
+       </mat-error>
+   </mat-error> -->
+
+
+   <div role="group" class="custom-email-input-container"
+     [formGroup]="emailparts"
+     [attr.aria-labelledby]="_formField?.getLabelId()">
+     <!-- <mat-label>Username</mat-label> -->
+  <input class="email-username" placeholder="username"
+         formControlName="username" 
+         aria-label="Email username"
+         (input)="_handleInput(emailparts.controls.username, atsymbol)"
+         #username>
+        
+  <span class="example-tel-input-spacer">&ndash;</span>
+  <!-- <mat-label>Atsymbol</mat-label> -->
+  <input class="email-atsymbol"
+         formControlName="atsymbol" placeholder="@"
+         maxLength="1"
+         size="1"
+         aria-label="Atsymbol"
+         (input)="_handleInput(emailparts.controls.atsymbol, domain)"
+         (keyup.backspace)="autoFocusPrev(emailparts.controls.atsymbol, username)"
+         #atsymbol>
+  <span class="example-tel-input-spacer">&ndash;</span>
+  <!-- <mat-label>Domain</mat-label> -->
+
+  <input class="email-domain"
+         formControlName="domain" placeholder="eg: domain.com"
+         aria-label="Email domain"
+         (input)="_handleInput(emailparts.controls.domain)"
+         (keyup.backspace)="autoFocusPrev(emailparts.controls.domain,atsymbol )"
+         #domain>
+</div>
+
+<mat-error *ngIf="emailparts.controls.username.invalid && emailparts.controls.username.touched">
+    <mat-error *ngIf="emailparts.controls.username.errors.required">
+        Email username is required.
+    </mat-error>
+    <mat-error *ngIf="emailparts.controls.username.errors.pattern">
+       Please Enter valid username.
+    </mat-error>
+</mat-error>
+<mat-error class="floatright" *ngIf="emailparts.controls.domain.invalid && emailparts.controls.domain.touched">
+    <mat-error *ngIf="emailparts.controls.domain.errors.required">
+        Email Domain is required.
+    </mat-error>
+    <mat-error *ngIf="emailparts.controls.domain.errors.pattern">
+       Please Enter valid domain.
+    </mat-error>
+</mat-error>
+
+

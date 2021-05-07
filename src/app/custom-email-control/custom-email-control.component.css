@@ -1,0 +1,44 @@
+
+  .email-username,.email-domain {
+    border: none;
+    padding: 0;
+    outline: none;
+    font: inherit;
+    text-align: left;
+    height:30px;
+    width:180px;
+    background-color:rgba(0,0,0,.04);
+
+  }
+  .email-atsymbol{
+    border: none;
+    padding: 0;
+    outline: none;
+    font: inherit;
+    text-align: left;
+    height:30px;
+    width:20px;
+    background-color:rgba(0,0,0,.04);
+
+  }
+  .example-tel-input-spacer {
+    opacity: 1;
+    transition: opacity 200ms;
+  }
+  :host.example-floating .example-tel-input-spacer {
+    opacity: 1;
+  }
+  .floatright{
+    float:right
+  }
+ input.example-email-input-element{
+    background-color:rgba(0,0,0,.04);
+  }
+
+  span {
+    opacity: 0;
+    transition: opacity 500ms;
+  }
+  :host.floating span {
+    opacity: 1;
+  }

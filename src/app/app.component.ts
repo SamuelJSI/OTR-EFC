@@ -10,8 +10,9 @@ export class AppComponent implements OnInit{
   title = 'anguarMaterial1';
   currentRoute: any;
   showMCCreatePage: any;
-  loggedInUser:any;
   responseEmittedFromChildComponent: any;
+  loggedInUser: string;
+  loggedInUserEmail: string;
 
   constructor(private router: Router,private route: ActivatedRoute ) {
     this.router.events.subscribe(event => {
@@ -24,10 +25,13 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.loggedInUser = localStorage.getItem("loggedInUsername");
+    this.loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
+
   }
   
   logOutProfile(){
     localStorage.removeItem("loggedInUsername");
+    localStorage.removeItem("loggedInUserEmail");
     this.router.navigate(["/login"]);
   }
   

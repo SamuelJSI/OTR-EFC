@@ -5,13 +5,14 @@ import { LoginComponent } from './login/login.component';
 import { TableComponent } from './table/table.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'table', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'createMoneycode', component: DynamictableComponent },
   { path: 'table', component: TableComponent,
   children:[
     { path: 'dynamictable', component: DynamictableComponent }
   ] }
+  
 
 ];
 

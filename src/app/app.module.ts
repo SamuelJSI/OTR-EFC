@@ -15,6 +15,9 @@ import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { TableComponent } from './table/table.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ExampleTelInputComponent } from './example-tel-input/example-tel-input.component';
+import { CustomEmailControlComponent } from './custom-email-control/custom-email-control.component';
+import { CustomemailFormFieldControlComponent } from './customemail-form-field-control/customemail-form-field-control.component';
 
 
 
@@ -24,7 +27,10 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     DynamictableComponent,
     DialogBoxComponent,
-    TableComponent
+    TableComponent,
+    ExampleTelInputComponent,
+    CustomEmailControlComponent,
+    CustomemailFormFieldControlComponent,
   ],
   imports: [
     BrowserModule,
