@@ -1,13 +1,14 @@
 .mat-stepper-horizontal-line,
 .mat-step-icon-state-edit,
 .mat-step-icon-state-number,
-.mat-step-icon-state-done {
+.mat-step-icon-state-done,
+.mat-step-optional {
   display: none;
 }
 
 .mat-step-header {
   padding: 0 5px !important;
-  height: auto !important;
+  height: 5px !important;
   flex: 1 1;
 }
 
@@ -17,7 +18,7 @@
 
 .mat-step-status-indicator {
   display: inline-block;
-  height: 5px;
+  height: 15px;
   width: 100%;
   background-color: #ccc;
 }

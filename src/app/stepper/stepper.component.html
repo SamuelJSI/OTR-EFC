@@ -11,18 +11,21 @@
     </span>
   </div>
 </div>
-<mat-horizontal-stepper linear #stepper>
+<mat-horizontal-stepper linear #stepper [selectedIndex]="">
   <mat-step
     #stepInstance="matStep"
     [editable]="step.isEditable"
     [stepControl]="step.form"
+    [optional]="step.isDisabled"
     [label]="step.label"
     *ngFor="let step of steps; index as index; first as first; last as last"
   >
     <ng-template matStepLabel>
-      <span class="mat-step-status-indicator"> </span>
+      <span class="mat-step-status-indicator" (click)="onStepLabelClick($event, step)"> </span>
     </ng-template>
-    <div>
+    <ng-container [ngTemplateOutlet]="step.template ? step.template : defaultTemplate" [ngTemplateOutletContext]="{ step: step}">
+    </ng-container>
+    <ng-template #defaultTemplate>
       <form [formGroup]="step.form" fxLayout="column">
         <mat-form-field fxFlex *ngFor="let field of step.fields">
           <mat-label>{{ field.label }}</mat-label>
@@ -34,17 +37,15 @@
           />
         </mat-form-field>
       </form>
-    </div>
+    </ng-template>
     <div fxLayout="row" fxLayoutAlign="start stretch">
       <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-        <button mat-stroked-button (click)="onCancelClick()">
-          Cancel
-        </button>
+        <button mat-stroked-button (click)="onCancelClick()">Cancel</button>
       </div>
       <div fxFlex fxLayout="row" fxLayoutAlign="end center">
         <button
           mat-stroked-button
-          (click)="onPreviousClick()"
+          (click)="onPreviousClick(stepInstance)"
           *ngIf="!first"
           class="mr-2"
         >
@@ -60,7 +61,7 @@
         </button>
         <button
           mat-stroked-button
-          (click)="onSubmitClick()"
+          (click)="onSubmitClick(stepInstance)"
           *ngIf="last"
           color="primary"
         >
