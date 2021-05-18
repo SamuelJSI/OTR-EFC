@@ -51,3 +51,7 @@ span.step-index {
   font-size: 18px;
   font-weight: bold;
 }
+
+.wex-card-content {
+  margin: 15px;
+}

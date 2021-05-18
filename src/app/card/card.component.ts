@@ -1,11 +1,9 @@
-import { CdkStep } from '@angular/cdk/stepper';
+import { CdkStep, StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
   EventEmitter,
-  Inject,
   Input,
   Output,
   QueryList,
@@ -18,36 +16,41 @@ import {
   FormControl,
   FormGroup,
   ValidatorFn,
-  Validators,
 } from '@angular/forms';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-
-import { StepperContentDirective } from './stepper-content.directive';
+import { CardContentDirective } from './card-content.directive';
 
 @Component({
-  selector: 'wex-stepper',
-  templateUrl: './stepper.component.html',
-  styleUrls: ['./stepper.component.css'],
+  selector: 'wex-card',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class StepperComponent implements AfterViewInit {
-  private stepperConfig: StepperConfig;
+export class CardComponent {
+  private cardConfig: CardConfig;
+  public stepperIndex: number;
+
   @Input()
-  public set config(config: StepperConfig) {
-    this.stepperConfig = new StepperConfig(config);
+  public set config(config: CardConfig) {
+    this.cardConfig = new CardConfig(config);
+    this.stepperIndex = config.defaultStep;
+  }
+
+  public get config(): CardConfig {
+    return this.cardConfig;
   }
 
   @ViewChild(MatHorizontalStepper)
   private stepperInstance: MatHorizontalStepper;
 
-  @ContentChildren(StepperContentDirective)
-  set stepperConents(contents: QueryList<StepperContentDirective>) {
+  @ContentChildren(CardContentDirective)
+  set stepperConents(contents: QueryList<CardContentDirective>) {
     for (const stepContent of contents) {
-      this.stepperConfig.steps.splice(
+      this.cardConfig.sections.splice(
         stepContent.order - 1,
         0,
-        new Step({
+        new Section({
           label: stepContent.label,
           fields: [],
           isEditable: stepContent.isEditable,
@@ -55,6 +58,11 @@ export class StepperComponent implements AfterViewInit {
           form: stepContent.form,
           template: stepContent.template,
           order: stepContent.order,
+          width: stepContent.width
+            ? stepContent.width
+            : this.cardConfig.width
+            ? this.cardConfig.width
+            : '',
         })
       );
     }
@@ -72,18 +80,11 @@ export class StepperComponent implements AfterViewInit {
   @Output()
   public previous: EventEmitter<any>;
 
-  public get steps(): Array<Step> {
-    if (this.stepperConfig) {
-      return this.stepperConfig.steps;
+  public get sectionConfigs(): Array<Section> {
+    if (this.cardConfig) {
+      return this.cardConfig.sections;
     }
     return [];
-  }
-
-  public get currentStep(): CdkStep {
-    if (this.stepperInstance && this.stepperInstance.selected) {
-      return this.stepperInstance.selected;
-    }
-    return null;
   }
 
   public get currentStepIndex(): number {
@@ -91,6 +92,13 @@ export class StepperComponent implements AfterViewInit {
       return this.stepperInstance.selectedIndex + 1;
     }
     return 0;
+  }
+
+  public get currentStep(): CdkStep {
+    if (this.stepperInstance && this.stepperInstance.selected) {
+      return this.stepperInstance.selected;
+    }
+    return null;
   }
 
   public get previousStep(): CdkStep {
@@ -125,23 +133,41 @@ export class StepperComponent implements AfterViewInit {
     return 0;
   }
 
+  public getNextStepIndex(currentIndex: number): number {
+    let index = Math.min(currentIndex + 1, this.sectionConfigs.length);
+    const config = this.getStepConfig(index);
+    if (config.isDisabled) {
+      index = this.getNextStepIndex(index);
+    }
+    return index;
+  }
+
+  public getPreviouseStepIndex(currentIndex: number): number {
+    let index = Math.max(currentIndex - 1, 0);
+    const config = this.getStepConfig(index);
+    if (config.isDisabled) {
+      index = this.getPreviouseStepIndex(index);
+    }
+    return index;
+  }
+
   constructor(private formBuilder: FormBuilder) {
     this.submit = new EventEmitter();
     this.cancel = new EventEmitter();
     this.next = new EventEmitter();
     this.previous = new EventEmitter();
+    this.stepperIndex = 0;
   }
 
-  ngAfterViewInit() {
-    if (this.stepperInstance) {
-    }
-  }
-
-  public getStep(index: number): Step {
-    if (this.steps) {
-      return this.steps[index];
+  public getStepConfig(index: number): Section {
+    if (this.sectionConfigs) {
+      return this.sectionConfigs[index];
     }
     return null;
+  }
+
+  onStepChange(event: StepperSelectionEvent) {
+    console.log(this.getStepConfig(event.selectedIndex));
   }
 
   onSubmitClick(step: CdkStep): void {
@@ -154,7 +180,7 @@ export class StepperComponent implements AfterViewInit {
     }
   }
 
-  onStepLabelClick(event: MouseEvent, stepConfig: Step) {
+  onStepLabelClick(event: MouseEvent, stepConfig: Section) {
     if (stepConfig.isDisabled) {
       event.preventDefault();
       event.stopPropagation();
@@ -176,8 +202,9 @@ export class StepperComponent implements AfterViewInit {
         control.markAsTouched();
       }
     }
+
     if (step && !step.hasError) {
-      this.stepperInstance.next();
+      this.stepperIndex = this.getNextStepIndex(this.stepperIndex);
       if (form.valid) {
         this.next.emit(step.stepControl.value);
       } else {
@@ -188,69 +215,98 @@ export class StepperComponent implements AfterViewInit {
 
   onPreviousClick(step: CdkStep): void {
     if (this.previousStep && this.previousStep.editable) {
-      this.stepperInstance.previous();
+      this.stepperIndex = this.getPreviouseStepIndex(this.stepperIndex);
       this.previous.emit(step.stepControl.value);
     }
   }
 }
 
-export class StepperConfig {
-  private _steps?: Array<Step>;
+export class CardConfig {
+  private _sections?: Array<Section>;
+  private _direction?: Direction;
+  private _layout?: Layout;
+
   public nextCallback?: Function;
   public previousCallback?: Function;
+  public width?: string;
   public cancelCallback?: Function;
   public defaultStep?: number;
 
-  constructor(config: StepperConfig) {
-    this._steps = [];
-    if (Array.isArray(config.steps)) {
-      for (const [index, step] of config.steps.entries()) {
-        this._steps.splice(
-          step.order && typeof step.order === 'number' ? step.order - 1 : index,
+  constructor(config: CardConfig) {
+    this._sections = [];
+    this._layout = config.layout ? config.layout : 'CARD';
+    this._direction = config.direction ? config.direction : 'column';
+    this.defaultStep = config.defaultStep ? config.defaultStep - 1 : 0;
+    this.width = config.width ? config.width : '';
+    if (Array.isArray(config.sections)) {
+      for (const [index, section] of config.sections.entries()) {
+        this._sections.splice(
+          section.order && typeof section.order === 'number'
+            ? section.order - 1
+            : index,
           0,
-          new Step({
-            label: step.label,
-            fields: step.fields,
-            isEditable: step.isEditable,
-            isDisabled: step.isDisabled,
+          new Section({
+            label: section.label,
+            fields: section.fields,
+            isEditable: section.isEditable,
+            isDisabled: section.isDisabled,
             template: null,
-            value: step.value ? step.value : {},
+            value: section.value ? section.value : {},
+            width: section.width ? section.width : this.width ? this.width : '',
           })
         );
       }
     }
   }
 
-  public set steps(steps: Array<Step>) {
-    this._steps = steps ? steps : [];
+  public set sections(sections: Array<Section>) {
+    this._sections = sections ? sections : [];
   }
-  public get steps(): Array<Step> {
-    return this._steps;
+  public get sections(): Array<Section> {
+    return this._sections;
+  }
+  public set layout(layout: Layout) {
+    this._layout = layout ? layout : 'CARD';
+  }
+  public get layout(): Layout {
+    return this._layout;
+  }
+  public set direction(direction: Direction) {
+    this._direction = direction ? direction : 'column';
+  }
+  public get direction(): Direction {
+    return this._direction;
   }
 }
 
-export class Step {
+export type Direction = 'row' | 'column';
+
+export type Layout = 'CARD' | 'STEP';
+
+export class Section {
   private _label?: string;
   public readonly form?: FormGroup;
-  private _fields?: Array<StepField>;
+  private _fields?: Array<Field>;
   private _isEditable?: boolean;
   private _isDisabled?: boolean;
   private _template?: TemplateRef<any>;
   public order?: number;
   public value?: any;
+  public width?: string;
 
-  constructor(step: Step) {
-    this._label = step.label;
-    this._fields = step.fields;
+  constructor(section: Section) {
+    this._label = section.label;
+    this._fields = section.fields;
+    this.width = section.width ? section.width : '100%';
     this.form = new FormGroup({});
-    this._isEditable = step.isEditable;
-    this._isDisabled = step.isDisabled;
-    this.order = typeof step.order === 'number' ? step.order - 1 : 1;
+    this._isEditable = section.isEditable;
+    this._isDisabled = section.isDisabled;
+    this.order = section.order ? section.order - 1 : 1;
 
-    this._template = step.template;
+    this._template = section.template;
     if (this.form instanceof FormGroup) {
-      if (step.value) {
-        this.form.setValue(step.value);
+      if (section.value) {
+        this.form.setValue(section.value);
       }
       if (this._isDisabled) {
         this.form.disable();
@@ -274,10 +330,10 @@ export class Step {
     }
   }
 
-  public set fields(fields: Array<StepField>) {
+  public set fields(fields: Array<Field>) {
     this._fields = fields ? fields : [];
   }
-  public get fields(): Array<StepField> {
+  public get fields(): Array<Field> {
     return this._fields;
   }
 
@@ -323,7 +379,7 @@ export type FieldType =
 
 export type FieldValidations = ValidatorFn | ValidatorFn[];
 
-export class StepField {
+export class Field {
   private _name?: string;
   private _label?: string;
   private _placeholder?: string;
@@ -331,6 +387,11 @@ export class StepField {
   private _validations?: FieldValidations;
   private form?: FormGroup;
   public value?: any;
+
+  constructor() {
+    this.name = 'test';
+    const name = this.name;
+  }
 
   public set name(name: string) {
     this._name = name ? name : '';

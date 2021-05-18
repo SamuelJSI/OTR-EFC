@@ -1,0 +1,149 @@
+<div class="wex-card-content">
+  <ng-container
+    [ngTemplateOutlet]="
+      config.layout === 'STEP' ? stepperTemplate : sectionTemplate
+    "
+    [ngTemplateOutletContext]="{
+      $implicit: sectionConfigs,
+      stepperIndex: stepperIndex
+    }"
+  ></ng-container>
+</div>
+<ng-template
+  #stepperTemplate
+  let-sectionConfigs
+  let-stepperIndex="stepperIndex"
+>
+  <div fxLayout="column" class="step-information">
+    <div fxFlex>
+      <span class="step-title">
+        {{ currentStep?.label }}
+      </span>
+      <span class="step-index">
+        {{ currentStepIndex }} of {{ totalSteps }}
+      </span>
+    </div>
+    <div fxFlex fxLayout="row" fxLayoutAlign="end start">
+      <span class="next-step-title" *ngIf="nextStep?.label">
+        Next: {{ nextStep?.label }}
+      </span>
+    </div>
+  </div>
+  <mat-horizontal-stepper
+    linear
+    #stepper
+    [selectedIndex]="stepperIndex"
+    (selectionChange)="onStepChange($event)"
+  >
+    <mat-step
+      #stepInstance="matStep"
+      [editable]="section.isEditable"
+      [stepControl]="section.form"
+      [optional]="section.isDisabled"
+      [label]="section.label"
+      *ngFor="
+        let section of sectionConfigs;
+        index as index;
+        first as first;
+        last as last
+      "
+    >
+      <ng-template matStepLabel>
+        <span
+          class="mat-step-status-indicator"
+          (click)="onStepLabelClick($event, section)"
+        >
+        </span>
+      </ng-template>
+      <ng-container
+        [ngTemplateOutlet]="
+          section.template ? section.template : defaultTemplate
+        "
+        [ngTemplateOutletContext]="{ section: section }"
+      >
+      </ng-container>
+      <ng-template #defaultTemplate>
+        <form [formGroup]="section.form" fxLayout="column">
+          <mat-form-field fxFlex *ngFor="let field of section.fields">
+            <mat-label>{{ field.label }}</mat-label>
+            <input
+              type="{{ field.type }}"
+              matInput
+              placeholder="{{ field.placeholder }}"
+              formControlName="{{ field.name }}"
+            />
+          </mat-form-field>
+        </form>
+      </ng-template>
+      <div fxLayout="row" fxLayoutAlign="start stretch">
+        <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+          <button mat-stroked-button (click)="onCancelClick()">Cancel</button>
+        </div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+          <button
+            mat-stroked-button
+            (click)="onPreviousClick(stepInstance)"
+            *ngIf="!first"
+            class="mr-2"
+          >
+            Previous
+          </button>
+          <button
+            mat-stroked-button
+            (click)="onNextClick(stepInstance)"
+            *ngIf="!last"
+            color="primary"
+          >
+            Next
+          </button>
+          <button
+            mat-stroked-button
+            (click)="onSubmitClick(stepInstance)"
+            *ngIf="last"
+            color="primary"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</ng-template>
+<ng-template #sectionTemplate let-sectionConfigs>
+  <div fxLayout="{{ config.direction }} wrap">
+    <mat-card
+      class="mb-3 mr-3"
+      [fxFlex]="section.width"
+      *ngFor="
+        let section of sectionConfigs;
+        index as index;
+        first as first;
+        last as last
+      "
+    >
+      <mat-card-title> {{ section.label }}</mat-card-title>
+      <mat-card-content>
+        <ng-container
+          [ngTemplateOutlet]="
+            section.template ? section.template : defaultTemplate
+          "
+          [ngTemplateOutletContext]="{ section: section }"
+        >
+        </ng-container>
+        <ng-template #defaultTemplate>
+          <form [formGroup]="section.form" fxLayout="column">
+            <mat-form-field fxFlex *ngFor="let field of section.fields">
+              <mat-label>{{ field.label }}</mat-label>
+              <input
+                type="{{ field.type }}"
+                matInput
+                placeholder="{{ field.placeholder }}"
+                formControlName="{{ field.name }}"
+              />
+            </mat-form-field>
+          </form>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>

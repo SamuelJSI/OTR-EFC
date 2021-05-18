@@ -2,9 +2,9 @@ import { Directive, Input, TemplateRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Directive({
-  selector: '[stepperContent]',
+  selector: '[cardContent]',
 })
-export class StepperContentDirective {
+export class CardContentDirective {
   @Input()
   public label: string;
 
@@ -19,6 +19,9 @@ export class StepperContentDirective {
 
   @Input()
   public form: FormGroup;
+
+  @Input()
+  public width: string;
 
   constructor(public template: TemplateRef<any>) {
     this.isEditable = true;

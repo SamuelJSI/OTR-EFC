@@ -17,8 +17,8 @@ import { MaterialModule } from './material/material.module';
 import { MoneycodeComponent } from './moneycode/moneycode.component';
 import { StepperSampleOneComponent } from './stepper-sample-one/stepper-sample-one.component';
 import { StepperSampleTwoComponent } from './stepper-sample-two/stepper-sample-two.component';
-import { StepperContentDirective } from './stepper/stepper-content.directive';
-import { StepperComponent } from './stepper/stepper.component';
+import { CardContentDirective } from './card/card-content.directive';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
   declarations: [
@@ -28,8 +28,8 @@ import { StepperComponent } from './stepper/stepper.component';
     DynamictableComponent,
     DialogBoxComponent,
     DashboardComponent,
-    StepperComponent,
-    StepperContentDirective,
+    CardComponent,
+    CardContentDirective,
     StepperSampleOneComponent,
     StepperSampleTwoComponent,
   ],
@@ -47,6 +47,6 @@ import { StepperComponent } from './stepper/stepper.component';
     ReactiveFormsModule,
   ],
   bootstrap: [AppComponent],
-  exports: [StepperComponent, StepperContentDirective ],
+  exports: [CardComponent, CardContentDirective],
 })
 export class AppModule {}
