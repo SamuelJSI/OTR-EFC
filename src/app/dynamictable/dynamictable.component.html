@@ -1,130 +1,211 @@
 <!-- Money code Create child component -->
 
-<app-moneycode *ngIf="currentRoute !== '/dynamictable'" (buttonClicked)="parentEventHandlerFunction($event)">
-</app-moneycode>
-
-
-<div class="container text-center" *ngIf="!showMCCreatePage && currentRoute !== '/createMoneycode'">
+<div
+  class="container text-center"
+  *ngIf="!showMCCreatePage && currentRoute !== '/createMoneycode'"
+>
   <!-- Add money code actions -->
   <div class="actionButtons">
-    <button mat-button (click)="openDialog('Add',{})" color="primary" class="addMC" data-placement="top" title="Add New MC">
-      New Moneycode
-    </button>&nbsp;&nbsp;
-    <button mat-button (click)="openDialog('DeleteAll',{});DeleteAll = true" color="primary" data-placement="top"
-      title="DeleteAll">
+    <button
+      mat-button
+      (click)="openDialog('Add', {})"
+      color="primary"
+      class="addMC"
+      data-placement="top"
+      title="Add New MC"
+    >
+      New Moneycode</button
+    >&nbsp;&nbsp;
+    <button
+      mat-button
+      (click)="openDialog('DeleteAll', {}); DeleteAll = true"
+      color="primary"
+      data-placement="top"
+      title="DeleteAll"
+    >
       <mat-icon>delete</mat-icon>DeleteAll
     </button>
   </div>
   <!-- search filter actions -->
-  <h3 class="mctitle">Moneycode Activity List</h3><br>
+  <h3 class="mctitle">Moneycode Activity List</h3>
+  <br />
 
   <div class="example-header">
     <mat-label class="searchlabel"><b>Search</b> </mat-label>&nbsp;&nbsp;&nbsp;
     <mat-form-field>
-      <input matInput (keyup)="filter($any($event.target).value)" placeholder="Filter" fxFlex="50">
+      <input
+        matInput
+        (keyup)="filter($any($event.target).value)"
+        placeholder="Filter"
+        fxFlex="50"
+      />
     </mat-form-field>
   </div>
 
   <!-- Data table -->
 
   <div class="table-responsive tablepostion">
-
-    <table class="table table-lg table-dark" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <table
+      class="table table-lg table-dark"
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      class="mat-elevation-z8"
+    >
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
           </mat-checkbox>
         </th>
         <td mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-            [checked]="selection.isSelected(row)">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+          >
           </mat-checkbox>
         </td>
-      </ng-container> &nbsp;&nbsp;
+      </ng-container>
+      &nbsp;&nbsp;
 
       <ng-container matColumnDef="Drivername">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Drivername </th>
-        <td mat-cell *matCellDef="let element"> {{element.Drivername}} </td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="hided-arrow"
+        >
+          Drivername
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.Drivername }}</td>
       </ng-container>
 
       <ng-container matColumnDef="DriverId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> DriverId </th>
-        <td mat-cell *matCellDef="let element"> {{element.DriverId}} </td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="hided-arrow"
+        >
+          DriverId
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.DriverId }}</td>
       </ng-container>
       <ng-container matColumnDef="Contract">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Contract Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.contract}} </td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="hided-arrow"
+        >
+          Contract Name
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.contract }}</td>
       </ng-container>
       <ng-container matColumnDef="BillingAmount">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Billing Amount </th>
-        <td mat-cell *matCellDef="let element"> {{element.BillingAmount}} </td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="hided-arrow"
+        >
+          Billing Amount
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.BillingAmount }}</td>
       </ng-container>
 
       <ng-container matColumnDef="BillingDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Updated Date </th>
-        <td mat-cell *matCellDef="let element"> {{element.BillingDate}} </td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="hided-arrow"
+        >
+          Updated Date
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.BillingDate }}</td>
       </ng-container>
 
       <ng-container matColumnDef="Status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="hided-arrow"> Status </th>
-        <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="hided-arrow"
+        >
+          Status
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.Status }}</td>
       </ng-container>
       <!-- Data table actions-->
 
       <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <th mat-header-cell *matHeaderCellDef>Action</th>
         <td mat-cell *matCellDef="let element" class="action-link">
           <!-- <button class="menu" mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">-->
-            <button mat-icon-button (click)="openDialog('Update',element)">
-              <mat-icon mat-icon-button color='primary'>edit</mat-icon>
-            </button>
-    
-            <button mat-icon-button (click)="openDialog('Delete',element)">
-              <mat-icon mat-icon-button color="warn">delete</mat-icon>
-            </button>
+          <button mat-icon-button (click)="openDialog('Update', element)">
+            <mat-icon mat-icon-button color="primary">edit</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="openDialog('Delete', element)">
+            <mat-icon mat-icon-button color="warn">delete</mat-icon>
+          </button>
 
           <!-- </mat-menu> -->
-
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)">
-      </tr>
-
-
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="onRowClicked(row)"
+      ></tr>
     </table>
     <!-- Data table pagination-->
 
-    <mat-paginator [hidden]="!dataSource.data.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 15]"
-      showFirstLastButtons></mat-paginator>
+    <mat-paginator
+      [hidden]="!dataSource.data.length"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 15]"
+      showFirstLastButtons
+    ></mat-paginator>
     <!-- handling Empty table when filtering and list all scenarios-->
 
     <table>
       <tbody>
         <tr *ngIf="dataSource.data.length === 0">
-          <td style="text-align: center;" [attr.colspan]="displayedColumns.length">
-            <mat-card>No Records Found
-            </mat-card>
+          <td
+            style="text-align: center"
+            [attr.colspan]="displayedColumns.length"
+          >
+            <mat-card>No Records Found </mat-card>
           </td>
         </tr>
         <tr *ngIf="displayNoRecords">
-          <td style="text-align: center;" [attr.colspan]="displayedColumns.length">
+          <td
+            style="text-align: center"
+            [attr.colspan]="displayedColumns.length"
+          >
             <mat-card>
-              <h3 style="text-align:center">No Records found for
-                <span style="color:purple"><b>"{{dataSource.filter}}"</b></span>
+              <h3 style="text-align: center">
+                No Records found for
+                <span style="color: purple"
+                  ><b>"{{ dataSource.filter }}"</b></span
+                >
               </h3>
             </mat-card>
           </td>
         </tr>
       </tbody>
-
     </table>
-
   </div>
 </div>

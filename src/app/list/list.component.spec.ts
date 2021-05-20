@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StepperSampleTwoComponent } from './stepper-sample-two.component';
+import { ListComponent } from './list.component';
 
-describe('StepperSampleTwoComponent', () => {
-  let component: StepperSampleTwoComponent;
-  let fixture: ComponentFixture<StepperSampleTwoComponent>;
+describe('ListComponent', () => {
+  let component: ListComponent;
+  let fixture: ComponentFixture<ListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StepperSampleTwoComponent ]
+      declarations: [ ListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StepperSampleTwoComponent);
+    fixture = TestBed.createComponent(ListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

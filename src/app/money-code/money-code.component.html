@@ -1,0 +1,11 @@
+<div>
+  <h2 class="text-center mt-3">Money Code</h2>
+  <wex-card
+    [config]="cardConfig"
+    (submit)="onSubmit($event)"
+    (next)="onNext($event)"
+    (previous)="onPrevious($event)"
+    (cancel)="onCancel()"
+  >
+  </wex-card>
+</div>

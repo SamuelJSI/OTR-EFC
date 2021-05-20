@@ -131,8 +131,14 @@
         >
         </ng-container>
         <ng-template #defaultTemplate>
-          <form [formGroup]="section.form" fxLayout="column">
-            <mat-form-field fxFlex *ngFor="let field of section.fields">
+          <form
+            [formGroup]="section.form"
+            fxLayout="{{ section.direction }} wrap" fxLayoutGap="15px"
+          >
+            <mat-form-field
+              fxFlex="{{ field.width }}"
+              *ngFor="let field of section.fields"
+            >
               <mat-label>{{ field.label }}</mat-label>
               <input
                 type="{{ field.type }}"
@@ -145,5 +151,15 @@
         </ng-template>
       </mat-card-content>
     </mat-card>
+    <div fxLayout="row" fxLayoutAlign="start stretch">
+      <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+        <button mat-stroked-button (click)="onCancelClick()">Cancel</button>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+        <button mat-stroked-button (click)="onSubmitClick()" color="primary">
+          Submit
+        </button>
+      </div>
+    </div>
   </div>
 </ng-template>

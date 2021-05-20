@@ -16,6 +16,7 @@ import {
   FormControl,
   FormGroup,
   ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { CardContentDirective } from './card-content.directive';
@@ -41,6 +42,13 @@ export class CardComponent {
     return this.cardConfig;
   }
 
+  @Input()
+  public set form(form: FormGroup) {
+    if (form) {
+      this.cardConfig.form = form;
+    }
+  }
+
   @ViewChild(MatHorizontalStepper)
   private stepperInstance: MatHorizontalStepper;
 
@@ -63,6 +71,7 @@ export class CardComponent {
             : this.cardConfig.width
             ? this.cardConfig.width
             : '',
+          direction: stepContent.direction,
         })
       );
     }
@@ -170,7 +179,7 @@ export class CardComponent {
     console.log(this.getStepConfig(event.selectedIndex));
   }
 
-  onSubmitClick(step: CdkStep): void {
+  onSubmitClick(step?: CdkStep): void {
     if (step && !step.hasError) {
       let valuesOfAllSteps = [];
       for (const step of this.stepperInstance.steps) {
@@ -225,6 +234,7 @@ export class CardConfig {
   private _sections?: Array<Section>;
   private _direction?: Direction;
   private _layout?: Layout;
+  public form?: FormGroup;
 
   public nextCallback?: Function;
   public previousCallback?: Function;
@@ -253,6 +263,7 @@ export class CardConfig {
             template: null,
             value: section.value ? section.value : {},
             width: section.width ? section.width : this.width ? this.width : '',
+            direction: section.direction,
           })
         );
       }
@@ -293,6 +304,7 @@ export class Section {
   public order?: number;
   public value?: any;
   public width?: string;
+  public direction?: Direction;
 
   constructor(section: Section) {
     this._label = section.label;
@@ -302,7 +314,7 @@ export class Section {
     this._isEditable = section.isEditable;
     this._isDisabled = section.isDisabled;
     this.order = section.order ? section.order - 1 : 1;
-
+    this.direction = section.direction ? section.direction : 'column';
     this._template = section.template;
     if (this.form instanceof FormGroup) {
       if (section.value) {
@@ -323,7 +335,7 @@ export class Section {
               value: '',
               disabled: this._isDisabled,
             },
-            field.validations
+            this.getControlValidations(field.validations)
           )
         );
       }
@@ -366,6 +378,25 @@ export class Section {
   public get template(): TemplateRef<any> {
     return this._template;
   }
+
+  private getControlValidations?(validations: FieldValidations): ValidatorFn[] {
+    const validationFunctions = [];
+    if (validations) {
+      if (validations.REQUIRED) {
+        validationFunctions.push(Validators.required);
+      }
+      if (validations.MIN) {
+        validationFunctions.push(Validators.min(validations.MIN as number));
+      }
+      if (validations.MAX) {
+        validationFunctions.push(Validators.max(validations.MAX as number));
+      }
+      if (validations.EMAIL) {
+        validationFunctions.push(Validators.email);
+      }
+    }
+    return validationFunctions;
+  }
 }
 
 export type FieldType =
@@ -377,7 +408,12 @@ export type FieldType =
   | 'date'
   | 'time';
 
-export type FieldValidations = ValidatorFn | ValidatorFn[];
+export type FieldValidations = {
+  REQUIRED?: boolean;
+  MIN?: number | string | Date;
+  MAX?: number | string | Date;
+  EMAIL?: boolean;
+};
 
 export class Field {
   private _name?: string;
@@ -385,13 +421,10 @@ export class Field {
   private _placeholder?: string;
   private _type?: FieldType;
   private _validations?: FieldValidations;
-  private form?: FormGroup;
   public value?: any;
+  public width?: string;
 
-  constructor() {
-    this.name = 'test';
-    const name = this.name;
-  }
+  constructor() {}
 
   public set name(name: string) {
     this._name = name ? name : '';
