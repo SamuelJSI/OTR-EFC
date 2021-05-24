@@ -3,7 +3,7 @@ import { AbstractControl, ControlValueAccessor, FormBuilder, FormGroup, NgContro
 import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import { MyEmail } from '../Interfaces/my-email';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
 @Component({
@@ -15,14 +15,16 @@ import { FocusMonitor } from '@angular/cdk/a11y';
   ]
  
 })
-export class CustomEmailControlComponent implements OnInit,ControlValueAccessor,OnDestroy{
+export class CustomEmailControlComponent implements OnInit , ControlValueAccessor, MatFormFieldControl<MyEmail>, OnDestroy{
   emailForm: FormGroup;
-  static testvar:string;
-  @Output() triggerEmail:EventEmitter<String> =new EventEmitter<String>();
+  //@Input('getEmail') getEmail: any;
+  @Output() triggerEmail:EventEmitter<MyEmail> =new EventEmitter<MyEmail>();
 
   ngOnInit(): void {
   }
  
+  @ViewChild('emailaddress') emailaddressInput: HTMLInputElement;
+
   stateChanges = new Subject<void>();
   focused = false;
   disabled: boolean;
@@ -46,10 +48,13 @@ export class CustomEmailControlComponent implements OnInit,ControlValueAccessor,
   }
   onChange = (_: any) => {};
   onTouched = () => {};
-  emailaddress:any
+
   get empty() {
-    let n = this.value;
-    return !n;
+    let n = this.emailForm.value;
+    return !n.emailaddress;
+  }
+  get errorState(): boolean {
+    return this.emailForm.invalid && this.emailForm.dirty;
   }
 
   constructor(
@@ -59,58 +64,69 @@ export class CustomEmailControlComponent implements OnInit,ControlValueAccessor,
     @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
     @Optional() @Self() public ngControl: NgControl) {
      
+   this.setValidation(formBuilder);
    //When form field control is in a focused state, the form field is displayed with a solid color underline
     _focusMonitor.monitor(_elementRef, true).subscribe(origin => {
       if (this.focused && !origin) {
         this.onTouched();
       }
       this.focused = !!origin;
+      this.stateChanges.next();
     });
 
     if (this.ngControl != null) { 
       // Setting the value accessor directly (instead of using the providers) to avoid running into a circular import.
       this.ngControl.valueAccessor = this;
       console.log("this.ngControl.valueAccessor ::",this.ngControl.valueAccessor);
-      // if(this.emailaddress){
-      //   this.triggerEmail.emit(this.emailAddress);
-      // }
+
     }
   }
-  
-  registerOnChange(fn) {
-    //console.log("registerOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChangeregisterOnChange");
-    this.onChange = fn;
+  writeValue(obj: any): void {
+  //  throw new Error('Method not implemented.');
   }
-
-  registerOnTouched(fn) {
-    this.onTouched = fn;
+  registerOnChange(fn: any): void {
+    //throw new Error('Method not implemented.');
   }
-
-  writeValue(value) {
-    if (value) {
-      this.value = value;
-      console.log("writeValue :: ",value);
-    }
+  registerOnTouched(fn: any): void {
+   // throw new Error('Method not implemented.');
+  }
+  setDisabledState?(isDisabled: boolean): void {
+   // throw new Error('Method not implemented.');
   }
  
-  emailAddress:any;
-  @Input('value') _value:any;
-
-  get value() {
-    return this._value;
+ 
+  setValidation(formBuilder){
+    this.emailForm = formBuilder.group({
+      emailaddress: [
+        null,
+        [Validators.required,Validators.pattern('[a-zA-Z0-9]*[@]{1}[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}')]
+    
+      ]
+    });
+  }
+  @Input()
+  get value(): MyEmail | null {
+    if (this.emailForm.valid) {
+      const {
+        value: { emailaddress }
+      } = this.emailForm;
+      return new MyEmail(emailaddress);
+    }
+    return null;
+  }
+  set value(email: MyEmail | null) {
+    if (this.emailForm.valid) {
+    const { emailaddress } = email || new MyEmail('');
+    this.emailForm.setValue({ emailaddress});
+    }
+    this.stateChanges.next();
   }
 
-  set value(val) {
-    this._value = val;
-    this.onChange(val);
-    this.onTouched();
+  onblurEvent(){
+    let formInput = this.value;
+    console.log("onblurEvent ::: ",formInput);
+    this.triggerEmail.emit(formInput);
   }
-
-  // onblurEvent(){
-  //   let formInput = this.value;
-  //   console.log("onblurEvent ::: ",formInput);
-  //   this.triggerEmail.emit(formInput);
-  // }
 
   ngOnDestroy() {
     this.stateChanges.complete();
@@ -120,9 +136,29 @@ export class CustomEmailControlComponent implements OnInit,ControlValueAccessor,
  
 
   onContainerClick() {
-    
+    // if (this.emailForm.controls.emailaddress.valid) {
+    //   this._focusMonitor.focusVia(this.emailaddressInput, 'program');
+    // } 
+    // if ((event.target as Element).tagName.toLowerCase() != 'input') {
+    //   this._elementRef.nativeElement.querySelector('input').focus();
+    // }
   }
 
+  // writeValue(email: MyEmail | null): void {
+  //   this.value = email;
+  // }
+
+  // registerOnChange(fn: any): void {
+  //   this.onChange = fn;
+  // }
+
+  // registerOnTouched(fn: any): void {
+  //   this.onTouched = fn;
+  // }
+
+  // setDisabledState?(isDisabled: boolean): void {
+  //   //throw new Error('Method not implemented.');
+  // }
   autoFocusPrev(control: AbstractControl, prevElement: HTMLInputElement): void {
     if (control.value.length < 1) {
       this._focusMonitor.focusVia(prevElement, 'program');
@@ -142,4 +178,39 @@ export class CustomEmailControlComponent implements OnInit,ControlValueAccessor,
   static ngAcceptInputType_required: BooleanInput;
 
 }
+/*@Input()
+  get placeholder(): string {
+    return this._placeholder;
+  }
+  set placeholder(value: string) {
+    console.log(value)
+    this._placeholder = value;
+    this.stateChanges.next();
+  }
+  private _placeholder: string;*/
+
+  /*@Input()
+  get required(): boolean {
+    return this._required;
+  }
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
+    this.stateChanges.next();
+  }
+  private _required = false;*/
+
+  /*@Input()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+    this._disabled ? this.emailForm.disable() : this.emailForm.enable();
+    this.stateChanges.next();
+  }
+  private _disabled = false;
+  
+    setDisabledState(isDisabled: boolean): void {
+   this.disabled = isDisabled;
+   }*/
 

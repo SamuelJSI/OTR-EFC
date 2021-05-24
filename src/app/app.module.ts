@@ -17,7 +17,9 @@ import { TableComponent } from './table/table.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ExampleTelInputComponent } from './example-tel-input/example-tel-input.component';
 import { CustomEmailControlComponent } from './custom-email-control/custom-email-control.component';
-import { CustomemailFormFieldControlComponent } from './customemail-form-field-control/customemail-form-field-control.component';
+import { AccountComponent } from './Account/Account.component';
+import { EmailControlComponent } from './email-control/email-control.component';
+import { TemplatedrivenFormComponent } from './templatedriven-form/templatedriven-form.component';
 
 
 
@@ -30,7 +32,9 @@ import { CustomemailFormFieldControlComponent } from './customemail-form-field-c
     TableComponent,
     ExampleTelInputComponent,
     CustomEmailControlComponent,
-    CustomemailFormFieldControlComponent,
+    AccountComponent,
+    EmailControlComponent,
+    TemplatedrivenFormComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +49,9 @@ import { CustomemailFormFieldControlComponent } from './customemail-form-field-c
     MatTableExporterModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [{provide: String, useValue: "dummy"}
+
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

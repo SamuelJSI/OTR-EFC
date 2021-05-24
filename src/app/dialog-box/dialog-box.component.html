@@ -85,7 +85,7 @@
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-      <input matInput placeholder="Unit" required formControlName="Unit" [(ngModel)]="local_data.unit" name="Unit">
+      <input matInput placeholder="Unit" required  [(ngModel)]="local_data.unit" name="Unit">
       <mat-error *ngIf="f.Unit.invalid">
         <mat-error *ngIf="f.Unit.errors.required">
           Unit is required.

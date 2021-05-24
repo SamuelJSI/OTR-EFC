@@ -20,41 +20,35 @@ export class LoginComponent implements OnInit {
   public userForm!: FormGroup;
   hide = true;
   user:any;
- @Input() triggerEmail:any;
   constructor(private router: Router, private route: ActivatedRoute,public fb: FormBuilder) {
-    this.user = [{Username:'',password:''}]
+    this.user = [{Username:'',password:'',email:''}]
   }
 
   ngOnInit(): void {
     
     this.userForm = this.fb.group({
       Username: ['',[Validators.required, Validators.maxLength(20)]],
-      //tel: new FormControl(new MyTel('', '', '')),
-      email: [new FormControl(new MyEmail('','',''),[])],
-
+      email: ['',[Validators.required,Validators.pattern('[a-zA-Z0-9]*[@]{1}[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}')]],
       password: ['',[Validators.required,Validators.pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$'))]]
-        //Validators.pattern('/^(?=.*[A-Z])(?=.*[!@#\$%\^&\*])(?=.{9,})/')])
     });
   }
 
   get f() { return this.userForm.controls; }
 
-  getcustomFormValue(valueemitted){
-    console.log("valueemitted",valueemitted);
-    this.user.email = valueemitted.email.username+valueemitted.email.atsymbol+valueemitted.email.domain;
-    console.log(" this.user.email  == ", this.user.email );
+  getcustomFormValue(valueemitted):void {
+    console.log("valueemitted :: ",valueemitted);
+    this.user.email = valueemitted.emailaddress;
   }
 
-  public login = (userFormValue: any) => {
-    console.log("login Info == ",userFormValue);
+  public login = (userFormValue: any):void => {
+    console.log("login Info == ",this.userForm.value);
     if (this.userForm.valid) {
-      let email = userFormValue.email.username+userFormValue.email.atsymbol+userFormValue.email.domain;
-      console.log("login Info email == ",email);
-
+      let email = userFormValue.email;
       localStorage.setItem("loggedInUsername",userFormValue.Username);
-      localStorage.setItem("loggedInUserEmail",email);
-
-    this.router.navigate(["/table"]);
+      localStorage.setItem("loggedInUserEmail",userFormValue.email);
+      if(localStorage.getItem("loggedInUserEmail")){
+       // this.router.navigate(["/table"]);
+      }
     }
   }
 

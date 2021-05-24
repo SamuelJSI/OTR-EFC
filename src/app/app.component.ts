@@ -11,10 +11,10 @@ export class AppComponent implements OnInit{
   currentRoute: any;
   showMCCreatePage: any;
   responseEmittedFromChildComponent: any;
-  loggedInUser: string;
-  loggedInUserEmail: string;
-
+  loggedInUser = localStorage.getItem("loggedInUsername");
+  loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
   constructor(private router: Router,private route: ActivatedRoute ) {
+
     this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
         console.log("currentRoute ::",this.router.url); 
@@ -24,8 +24,7 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.loggedInUser = localStorage.getItem("loggedInUsername");
-    this.loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
+  
 
   }
   
